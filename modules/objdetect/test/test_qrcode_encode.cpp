@@ -5,6 +5,16 @@
 #include "test_precomp.hpp"
 namespace opencv_test { namespace {
 
+#if !defined CV_CXX11
+// Wrapper for generating seeded random number via std::rand.
+template<unsigned Seed>
+class SeededRandFunctor {
+public:
+    SeededRandFunctor() { std::srand(Seed); }
+    int operator()(int i) { return std::rand() % (i + 1); }
+};
+#endif
+
 std::string encode_qrcode_images_name[] = {
         "version1_mode1.png", "version1_mode2.png", "version1_mode4.png",
         "version2_mode1.png", "version2_mode2.png", "version2_mode4.png",
@@ -254,7 +264,8 @@ TEST(Objdetect_QRCode_Encode_Decode, regression)
                 int true_capacity = establishCapacity(mode, version, cur_capacity);
 
                 std::string input_info = symbol_set;
-                std::random_shuffle(input_info.begin(),input_info.end());
+                std::mt19937 rand_gen {1};
+                std::shuffle(input_info.begin(), input_info.end(), rand_gen);
                 int count = 0;
                 if((int)input_info.length() > true_capacity)
                 {
@@ -318,9 +329,9 @@ TEST(Objdetect_QRCode_Encode_Kanji, regression)
     Mat qrcode;
 
     const int testing_versions = 3;
-    std::string input_infos[testing_versions] = {"\x82\xb1\x82\xf1\x82\xc9\x82\xbf\x82\xcd\x90\xa2\x8a\x45", // こんにちは世界
-                                                 "\x82\xa8\x95\xa0\x82\xaa\x8b\xf3\x82\xa2\x82\xc4\x82\xa2\x82\xdc\x82\xb7", // お腹が空いています
-                                                 "\x82\xb1\x82\xf1\x82\xc9\x82\xbf\x82\xcd\x81\x41\x8e\x84\x82\xcd\x8f\xad\x82\xb5\x93\xfa\x96\x7b\x8c\xea\x82\xf0\x98\x62\x82\xb5\x82\xdc\x82\xb7" // こんにちは、私は少し日本語を話します
+    std::string input_infos[testing_versions] = {"\x82\xb1\x82\xf1\x82\xc9\x82\xbf\x82\xcd\x90\xa2\x8a\x45", // "Hello World" in Japanese
+                                                 "\x82\xa8\x95\xa0\x82\xaa\x8b\xf3\x82\xa2\x82\xc4\x82\xa2\x82\xdc\x82\xb7", // "I am hungry" in Japanese
+                                                 "\x82\xb1\x82\xf1\x82\xc9\x82\xbf\x82\xcd\x81\x41\x8e\x84\x82\xcd\x8f\xad\x82\xb5\x93\xfa\x96\x7b\x8c\xea\x82\xf0\x98\x62\x82\xb5\x82\xdc\x82\xb7" // "Hello, I speak a little Japanese" in Japanese
                                                 };
 
     for (int i = 0; i < testing_versions; i++)
@@ -380,8 +391,8 @@ TEST(Objdetect_QRCode_Encode_Decode_Structured_Append, DISABLED_regression)
         std::string symbol_set = config["symbols_set"];
 
         std::string input_info = symbol_set;
-        std::random_shuffle(input_info.begin(), input_info.end());
-
+        std::mt19937 rand_gen {1};
+        std::shuffle(input_info.begin(), input_info.end(), rand_gen);
         for (int j = min_stuctures_num; j < max_stuctures_num; j++)
         {
             QRCodeEncoder::Params params;
@@ -432,6 +443,32 @@ TEST(Objdetect_QRCode_Encode_Decode_Structured_Append, DISABLED_regression)
 }
 
 #endif // UPDATE_QRCODE_TEST_DATA
+
+CV_ENUM(EncodeModes, QRCodeEncoder::EncodeMode::MODE_NUMERIC,
+                     QRCodeEncoder::EncodeMode::MODE_ALPHANUMERIC,
+                     QRCodeEncoder::EncodeMode::MODE_BYTE)
+
+typedef ::testing::TestWithParam<EncodeModes> Objdetect_QRCode_Encode_Decode_Structured_Append_Parameterized;
+TEST_P(Objdetect_QRCode_Encode_Decode_Structured_Append_Parameterized, regression_22205)
+{
+    const std::string input_data = "the quick brown fox jumps over the lazy dog";
+
+    std::vector<cv::Mat> result_qrcodes;
+
+    cv::QRCodeEncoder::Params params;
+    int encode_mode = GetParam();
+    params.mode = static_cast<cv::QRCodeEncoder::EncodeMode>(encode_mode);
+
+    for(size_t struct_num = 2; struct_num < 5; ++struct_num)
+    {
+        params.structure_number = static_cast<int>(struct_num);
+        cv::Ptr<cv::QRCodeEncoder> encoder = cv::QRCodeEncoder::create(params);
+        encoder->encodeStructuredAppend(input_data, result_qrcodes);
+        EXPECT_EQ(result_qrcodes.size(), struct_num) << "The number of QR Codes requested is not equal"<<
+                                                    "to the one returned";
+    }
+}
+INSTANTIATE_TEST_CASE_P(/**/, Objdetect_QRCode_Encode_Decode_Structured_Append_Parameterized, EncodeModes::all());
 
 TEST(Objdetect_QRCode_Encode_Decode, regression_issue22029)
 {

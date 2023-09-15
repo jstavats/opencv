@@ -579,9 +579,7 @@ CASE(test_dropout_default_mask_ratio)
 CASE(test_dropout_default_old)
     // no filter
 CASE(test_dropout_default_ratio)
-#if SKIP_SET_1
-    SKIP;
-#endif
+    // no filter
 CASE(test_dropout_random_old)
     // no filter
 CASE(test_dynamicquantizelinear)
@@ -1588,6 +1586,10 @@ CASE(test_scatter_elements_with_duplicate_indices)
     // no filter
 CASE(test_scatter_elements_with_negative_indices)
     // no filter
+CASE(test_scatter_elements_with_reduction_max)
+    // no filter
+CASE(test_scatter_elements_with_reduction_min)
+    // no filter
 CASE(test_scatter_elements_without_axis)
     // no filter
 CASE(test_scatter_with_axis)
@@ -1597,6 +1599,10 @@ CASE(test_scatter_without_axis)
 CASE(test_scatternd)
     // no filter
 CASE(test_scatternd_add)
+    // no filter
+CASE(test_scatternd_max)
+    // no filter
+CASE(test_scatternd_min)
     // no filter
 CASE(test_scatternd_multiply)
     // no filter

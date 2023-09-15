@@ -108,6 +108,7 @@ elseif(CV_ICC)
 elseif(CV_GCC OR CV_CLANG)
   if(ENABLE_FAST_MATH)
     add_extra_compiler_option(-ffast-math)
+    add_extra_compiler_option(-fno-finite-math-only)
   endif()
 endif()
 
@@ -136,7 +137,7 @@ if(CV_GCC OR CV_CLANG)
   endif()
   add_extra_compiler_option(-Wsign-promo)
   add_extra_compiler_option(-Wuninitialized)
-  if(CV_GCC AND (CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 6.0) AND (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 7.0))
+  if(CV_GCC AND (CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 6.0) AND (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 7.0 OR ARM))
     add_extra_compiler_option(-Wno-psabi)
   endif()
   if(HAVE_CXX11)
@@ -260,7 +261,11 @@ if(CV_GCC OR CV_CLANG)
   endif()
 
   if(ENABLE_LTO)
-    add_extra_compiler_option(-flto)
+    if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 12)
+      add_extra_compiler_option(-flto=auto)
+    else()
+      add_extra_compiler_option(-flto)
+    endif()
   endif()
   if(ENABLE_THIN_LTO)
     add_extra_compiler_option(-flto=thin)
@@ -437,6 +442,7 @@ if(MSVC)
     ocv_warnings_disable(CMAKE_CXX_FLAGS /wd4275) # non dll-interface class 'std::exception' used as base for dll-interface class 'cv::Exception'
     ocv_warnings_disable(CMAKE_CXX_FLAGS /wd4512) # Assignment operator could not be generated
     ocv_warnings_disable(CMAKE_CXX_FLAGS /wd4589) # Constructor of abstract class 'cv::ORB' ignores initializer for virtual base class 'cv::Algorithm'
+    ocv_warnings_disable(CMAKE_CXX_FLAGS /wd4819) # Symbols like delta or epsilon cannot be represented
   endif()
 
   if(CV_ICC AND NOT ENABLE_NOISY_WARNINGS)

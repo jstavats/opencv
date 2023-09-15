@@ -757,10 +757,34 @@ static void remapBilinear( const Mat& _src, Mat& _dst, const Mat& _xy,
             }
             else
             {
-                if( borderType == BORDER_TRANSPARENT && cn != 3 )
-                {
-                    D += (X1 - dx)*cn;
-                    dx = X1;
+                if (borderType == BORDER_TRANSPARENT) {
+                    for (; dx < X1; dx++, D += cn) {
+                        if (dx >= dsize.width) continue;
+                        const int sx = XY[dx * 2], sy = XY[dx * 2 + 1];
+                        // If the mapped point is still within bounds, it did not get computed
+                        // because it lacked 4 neighbors. Still, it can be computed with an
+                        // approximate formula. If it is outside, the point is left untouched.
+                        if (sx >= 0 && sx <= ssize.width - 1 && sy >= 0 && sy <= ssize.height - 1) {
+                            const AT* w = wtab + FXY[dx] * 4;
+                            WT w_tot = 0;
+                            if (sx >= 0 && sy >= 0) w_tot += w[0];
+                            if (sy >= 0 && sx < ssize.width - 1) w_tot += w[1];
+                            if (sx >= 0 && sy < ssize.height - 1) w_tot += w[2];
+                            if (sx < ssize.width - 1 && sy < ssize.height - 1) w_tot += w[3];
+                            if (w_tot == 0.f) continue;
+                            const WT w_tot_ini = (WT)w[0] + w[1] + w[2] + w[3];
+                            const T* S = S0 + sy * sstep + sx * cn;
+                            for (int k = 0; k < cn; k++) {
+                                WT t0 = 0;
+                                if (sx >= 0 && sy >= 0) t0 += S[k] * w[0];
+                                if (sy >= 0 && sx < ssize.width - 1) t0 += S[k + cn] * w[1];
+                                if (sx >= 0 && sy < ssize.height - 1) t0 += S[sstep + k] * w[2];
+                                if (sx < ssize.width - 1 && sy < ssize.height - 1) t0 += S[sstep + k + cn] * w[3];
+                                t0 = (WT)(t0 * (float)w_tot_ini / w_tot);
+                                D[k] = castOp(t0);
+                            }
+                        }
+                    }
                     continue;
                 }
 
@@ -831,10 +855,6 @@ static void remapBilinear( const Mat& _src, Mat& _dst, const Mat& _xy,
                                 v2 = S0 + sy1*sstep + sx0*cn;
                                 v3 = S0 + sy1*sstep + sx1*cn;
                             }
-                            else if( borderType == BORDER_TRANSPARENT &&
-                                ((unsigned)sx >= (unsigned)(ssize.width-1) ||
-                                (unsigned)sy >= (unsigned)(ssize.height-1)))
-                                continue;
                             else
                             {
                                 sx0 = borderInterpolate(sx, ssize.width, borderType);
@@ -1340,15 +1360,15 @@ static bool ocl_remap(InputArray _src, OutputArray _dst, InputArray _map1, Input
 
     if (interpolation != INTER_NEAREST)
     {
-        char cvt[3][40];
+        char cvt[3][50];
         int wdepth = std::max(CV_32F, depth);
         buildOptions = buildOptions
                       + format(" -D WT=%s -D convertToT=%s -D convertToWT=%s"
                                " -D convertToWT2=%s -D WT2=%s",
                                ocl::typeToStr(CV_MAKE_TYPE(wdepth, cn)),
-                               ocl::convertTypeStr(wdepth, depth, cn, cvt[0]),
-                               ocl::convertTypeStr(depth, wdepth, cn, cvt[1]),
-                               ocl::convertTypeStr(CV_32S, wdepth, 2, cvt[2]),
+                               ocl::convertTypeStr(wdepth, depth, cn, cvt[0], sizeof(cvt[0])),
+                               ocl::convertTypeStr(depth, wdepth, cn, cvt[1], sizeof(cvt[1])),
+                               ocl::convertTypeStr(CV_32S, wdepth, 2, cvt[2], sizeof(cvt[2])),
                                ocl::typeToStr(CV_MAKE_TYPE(wdepth, 2)));
     }
     int scalarcn = cn == 3 ? 4 : cn;
@@ -2178,6 +2198,9 @@ public:
     #if CV_TRY_SSE4_1
         bool useSSE4_1 = CV_CPU_HAS_SUPPORT_SSE4_1;
     #endif
+    #if CV_TRY_LASX
+        bool useLASX = CV_CPU_HAS_SUPPORT_LASX;
+    #endif
 
         int bh0 = std::min(BLOCK_SZ/2, dst.rows);
         int bw0 = std::min(BLOCK_SZ*BLOCK_SZ/bh0, dst.cols);
@@ -2240,6 +2263,10 @@ public:
                         #if CV_TRY_AVX2
                         if ( useAVX2 )
                             x1 = opt_AVX2::warpAffineBlockline(adelta + x, bdelta + x, xy, alpha, X0, Y0, bw);
+                        #endif
+                        #if CV_TRY_LASX
+                        if ( useLASX )
+                            x1 = opt_LASX::warpAffineBlockline(adelta + x, bdelta + x, xy, alpha, X0, Y0, bw);
                         #endif
                         #if CV_SIMD128
                         {
@@ -2483,8 +2510,8 @@ static bool ocl_warpTransform(InputArray _src, OutputArray _dst, InputArray _M0,
                       ocl::typeToStr(CV_MAT_DEPTH(type)),
                       ocl::typeToStr(sctype),
                       ocl::typeToStr(CV_MAKE_TYPE(wdepth, cn)), depth,
-                      ocl::convertTypeStr(depth, wdepth, cn, cvt[0]),
-                      ocl::convertTypeStr(wdepth, depth, cn, cvt[1]),
+                      ocl::convertTypeStr(depth, wdepth, cn, cvt[0], sizeof(cvt[0])),
+                      ocl::convertTypeStr(wdepth, depth, cn, cvt[1], sizeof(cvt[1])),
                       doubleSupport ? " -D DOUBLE_SUPPORT" : "",
                       useDouble ? "double" : "float",
                       cn, rowsPerWI);
@@ -2531,6 +2558,132 @@ static bool ocl_warpTransform(InputArray _src, OutputArray _dst, InputArray _M0,
 
     size_t globalThreads[2] = { (size_t)dst.cols, ((size_t)dst.rows + rowsPerWI - 1) / rowsPerWI };
     return k.run(2, globalThreads, NULL, false);
+}
+
+#endif
+
+#ifdef HAVE_IPP
+#define IPP_WARPAFFINE_PARALLEL 1
+
+#ifdef HAVE_IPP_IW
+
+class ipp_warpAffineParallel: public ParallelLoopBody
+{
+public:
+    ipp_warpAffineParallel(::ipp::IwiImage &src, ::ipp::IwiImage &dst, IppiInterpolationType _inter, double (&_coeffs)[2][3], ::ipp::IwiBorderType _borderType, IwTransDirection _iwTransDirection, bool *_ok):m_src(src), m_dst(dst)
+    {
+        pOk = _ok;
+
+        inter          = _inter;
+        borderType     = _borderType;
+        iwTransDirection = _iwTransDirection;
+
+        for( int i = 0; i < 2; i++ )
+            for( int j = 0; j < 3; j++ )
+                coeffs[i][j] = _coeffs[i][j];
+
+        *pOk = true;
+    }
+    ~ipp_warpAffineParallel() {}
+
+    virtual void operator() (const Range& range) const CV_OVERRIDE
+    {
+        CV_INSTRUMENT_REGION_IPP();
+
+        if(*pOk == false)
+            return;
+
+        try
+        {
+            ::ipp::IwiTile tile = ::ipp::IwiRoi(0, range.start, m_dst.m_size.width, range.end - range.start);
+            CV_INSTRUMENT_FUN_IPP(::ipp::iwiWarpAffine, m_src, m_dst, coeffs, iwTransDirection, inter, ::ipp::IwiWarpAffineParams(), borderType, tile);
+        }
+        catch(const ::ipp::IwException &)
+        {
+            *pOk = false;
+            return;
+        }
+    }
+private:
+    ::ipp::IwiImage &m_src;
+    ::ipp::IwiImage &m_dst;
+
+    IppiInterpolationType inter;
+    double coeffs[2][3];
+    ::ipp::IwiBorderType borderType;
+    IwTransDirection iwTransDirection;
+
+    bool  *pOk;
+    const ipp_warpAffineParallel& operator= (const ipp_warpAffineParallel&);
+};
+
+#endif
+
+static bool ipp_warpAffine( InputArray _src, OutputArray _dst, int interpolation, int borderType, InputArray _M, int flags )
+{
+#ifdef HAVE_IPP_IW
+    CV_INSTRUMENT_REGION_IPP();
+
+    if (!cv::ipp::useIPP_NotExact())
+        return false;
+
+    IppiInterpolationType ippInter    = ippiGetInterpolation(interpolation);
+    if((int)ippInter < 0)
+        return false;
+
+    // Acquire data and begin processing
+    try
+    {
+        Mat src = _src.getMat();
+        Mat dst = _dst.getMat();
+        ::ipp::IwiImage        iwSrc = ippiGetImage(src);
+        ::ipp::IwiImage        iwDst = ippiGetImage(dst);
+        ::ipp::IwiBorderType   ippBorder(ippiGetBorderType(borderType));
+        IwTransDirection       iwTransDirection;
+        if(!ippBorder)
+            return false;
+
+        if( !(flags & WARP_INVERSE_MAP) )
+            iwTransDirection = iwTransForward;
+        else
+            iwTransDirection = iwTransInverse;
+
+        Mat M = _M.getMat();
+        double coeffs[2][3];
+        for( int i = 0; i < 2; i++ )
+            for( int j = 0; j < 3; j++ )
+                coeffs[i][j] = M.at<double>(i, j);
+
+        const int threads = ippiSuggestThreadsNum(iwDst, 2);
+
+        if(IPP_WARPAFFINE_PARALLEL && threads > 1)
+        {
+            bool  ok      = true;
+            Range range(0, (int)iwDst.m_size.height);
+            ipp_warpAffineParallel invoker(iwSrc, iwDst, ippInter, coeffs, ippBorder, iwTransDirection, &ok);
+            if(!ok)
+                return false;
+
+            parallel_for_(range, invoker, threads*4);
+
+            if(!ok)
+                return false;
+        } else {
+            CV_INSTRUMENT_FUN_IPP(::ipp::iwiWarpAffine, iwSrc, iwDst, coeffs, iwTransDirection, ippInter, ::ipp::IwiWarpAffineParams(), ippBorder);
+        }
+
+    }
+    catch (const ::ipp::IwException &)
+    {
+        return false;
+    }
+
+    return true;
+#else
+    CV_UNUSED(_src); CV_UNUSED(_dst); CV_UNUSED(interpolation);
+    CV_UNUSED(borderType); CV_UNUSED(_M); CV_UNUSED(flags);
+    return false;
+#endif
 }
 
 #endif
@@ -2603,6 +2756,8 @@ void cv::warpAffine( InputArray _src, OutputArray _dst,
 
     CV_Assert( (M0.type() == CV_32F || M0.type() == CV_64F) && M0.rows == 2 && M0.cols == 3 );
     M0.convertTo(matM, matM.type());
+
+    CV_IPP_RUN_FAST(ipp_warpAffine(src, dst, interpolation, borderType, matM, flags));
 
     if( !(flags & WARP_INVERSE_MAP) )
     {
