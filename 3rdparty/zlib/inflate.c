@@ -79,6 +79,13 @@
  *
  * The history for versions after 1.2.0 are in ChangeLog in zlib distribution.
  */
+#if defined(WITH_IPP)
+/*
+ * This source code file was modified with Intel(R) Integrated Performance Primitives library content
+ */
+#include "ippcore.h"
+#include "ippdc.h"
+#endif
 
 #include "zutil.h"
 #include "inftrees.h"
@@ -229,7 +236,10 @@ int stream_size;
     state->strm = strm;
     state->window = Z_NULL;
     state->mode = HEAD;     /* to pass state test in inflateReset2() */
-    state->check = 1L;      /* 1L is the result of adler32() zero length data */
+#if defined(WITH_IPP)
+    ((IppInflateState*)state->codes)->pWindow = Z_NULL;
+    ((IppInflateState*)state->codes)->tableBufferSize = ENOUGH * sizeof(code) - sizeof(IppInflateState);
+#endif
     ret = inflateReset2(strm, windowBits);
     if (ret != Z_OK) {
         ZFREE(strm, state);
@@ -408,9 +418,17 @@ unsigned copy;
     /* if it hasn't been done already, allocate space for the window */
     if (state->window == Z_NULL) {
         state->window = (unsigned char FAR *)
+#if !defined(WITH_IPP)
                         ZALLOC(strm, 1U << state->wbits,
                                sizeof(unsigned char));
+#else
+                        ZALLOC(strm, (1U << state->wbits) + 64,
+                               sizeof(unsigned char));
+#endif
         if (state->window == Z_NULL) return 1;
+#if defined(WITH_IPP)
+        ((IppInflateState*)state->codes)->pWindow = state->window;
+#endif
     }
 
     /* if window not in use yet, initialize */
@@ -418,6 +436,9 @@ unsigned copy;
         state->wsize = 1U << state->wbits;
         state->wnext = 0;
         state->whave = 0;
+#if defined(WITH_IPP)
+        ((IppInflateState*)state->codes)->winSize = state->wsize;
+#endif
     }
 
     /* copy state->wsize or less output bytes into the circular window */
@@ -633,9 +654,13 @@ int flush;
     unsigned bits;              /* bits in bit buffer */
     unsigned in, out;           /* save starting available input and output */
     unsigned copy;              /* number of stored or match bytes to copy */
+#if !defined(WITH_IPP)
     unsigned char FAR *from;    /* where to copy match bytes from */
+#endif
     code here;                  /* current decoding table entry */
+#if !defined(WITH_IPP)
     code last;                  /* parent table entry */
+#endif
     unsigned len;               /* length to copy for repeats, bits to drop */
     int ret;                    /* return code */
 #ifdef GUNZIP
@@ -863,6 +888,14 @@ int flush;
         case TYPEDO:
             if (state->last) {
                 BYTEBITS();
+#if defined(WITH_IPP)
+                if (bits >= 8) {
+                    bits -= 8;
+                    hold &= (1U << bits) - 1;
+                    have++;
+                    next--;
+                    }
+#endif
                 state->mode = CHECK;
                 break;
             }
@@ -876,7 +909,11 @@ int flush;
                 state->mode = STORED;
                 break;
             case 1:                             /* fixed block */
+#if defined(WITH_IPP)
+                ((IppInflateState*)state->codes)->tableType = 0;
+#else
                 fixedtables(state);
+#endif
                 Tracev((stderr, "inflate:     fixed codes block%s\n",
                         state->last ? " (last)" : ""));
                 state->mode = LEN_;             /* decode codes */
@@ -958,7 +995,11 @@ int flush;
             }
             while (state->have < 19)
                 state->lens[order[state->have++]] = 0;
+#if defined(WITH_IPP)
+            state->next = state->codes + sizeof(IppInflateState);
+#else
             state->next = state->codes;
+#endif
             state->lencode = (const code FAR *)(state->next);
             state->lenbits = 7;
             ret = inflate_table(CODES, state->lens, 19, &(state->next),
@@ -1030,6 +1071,7 @@ int flush;
                 break;
             }
 
+#if !defined(WITH_IPP)
             /* build code tables -- note: do not change the lenbits or distbits
                values here (9 and 6) without reading the comments in inftrees.h
                concerning the ENOUGH constants, which depend on those values */
@@ -1039,10 +1081,15 @@ int flush;
             ret = inflate_table(LENS, state->lens, state->nlen, &(state->next),
                                 &(state->lenbits), state->work);
             if (ret) {
+#else
+            if( ippStsNoErr != ippsInflateBuildHuffTable( state->lens, state->nlen, state->ndist,
+                                                          (IppInflateState*)state->codes ) ) {
+#endif
                 strm->msg = (char *)"invalid literal/lengths set";
                 state->mode = BAD;
                 break;
             }
+#if !defined(WITH_IPP)
             state->distcode = (const code FAR *)(state->next);
             state->distbits = 6;
             ret = inflate_table(DISTS, state->lens + state->nlen, state->ndist,
@@ -1052,6 +1099,7 @@ int flush;
                 state->mode = BAD;
                 break;
             }
+#endif
             Tracev((stderr, "inflate:       codes ok\n"));
             state->mode = LEN_;
             if (flush == Z_TREES) goto inf_leave;
@@ -1060,6 +1108,7 @@ int flush;
             state->mode = LEN;
                 /* fallthrough */
         case LEN:
+#if !defined(WITH_IPP)
             if (have >= 6 && left >= 258) {
                 RESTORE();
                 inflate_fast(strm, out);
@@ -1108,8 +1157,13 @@ int flush;
             }
             state->extra = (unsigned)(here.op) & 15;
             state->mode = LENEXT;
+<<<<<<< Updated upstream
                 /* fallthrough */
+=======
+#endif
+>>>>>>> Stashed changes
         case LENEXT:
+#if !defined(WITH_IPP)
             if (state->extra) {
                 NEEDBITS(state->extra);
                 state->length += BITS(state->extra);
@@ -1216,6 +1270,26 @@ int flush;
             left--;
             state->mode = LEN;
             break;
+#else
+            {
+                IppInflateMode ippMode;
+                if( LEN == state->mode ) ippMode = ippLEN;
+                else if( LENEXT == state->mode ) ippMode = ippLENEXT;
+                else { state->mode = BAD; break; }
+                if( ippStsNoErr != ippsInflate_8u( &next, &have, (Ipp32u*)&hold, &bits, state->wnext,
+                                                 &put, &left, out - left,
+                                                 &ippMode, (IppInflateState*)state->codes ) ) {
+                    strm->msg   = (char *)"invalid input stream";
+                    state->mode = BAD;
+                    break;
+                }
+                if( ippLEN == ippMode ) state->mode = LEN;
+                else if( ippLENEXT == ippMode ) state->mode = LENEXT;
+                else if( ippTYPE == ippMode ) { state->mode = TYPE; break; }
+                else { state->mode = BAD; break; }
+            }
+            goto inf_leave;
+#endif
         case CHECK:
             if (state->wrap) {
                 NEEDBITS(32);
@@ -1511,7 +1585,11 @@ z_streamp source;
     window = Z_NULL;
     if (state->window != Z_NULL) {
         window = (unsigned char FAR *)
+#if !defined(WITH_IPP)
                  ZALLOC(source, 1U << state->wbits, sizeof(unsigned char));
+#else
+                 ZALLOC(source, (1U << state->wbits) + 64, sizeof(unsigned char));
+#endif
         if (window == Z_NULL) {
             ZFREE(source, copy);
             return Z_MEM_ERROR;
@@ -1534,6 +1612,9 @@ z_streamp source;
     }
     copy->window = window;
     dest->state = (struct internal_state FAR *)copy;
+#if defined(WITH_IPP)
+    ((IppInflateState*)copy->codes)->pWindow = window;
+#endif
     return Z_OK;
 }
 

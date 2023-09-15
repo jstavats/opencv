@@ -48,7 +48,11 @@ typedef struct {
    updated. */
 #define ENOUGH_LENS 852
 #define ENOUGH_DISTS 592
+#if defined(WITH_IPP)
+#define ENOUGH 2048
+#else
 #define ENOUGH (ENOUGH_LENS+ENOUGH_DISTS)
+#endif
 
 /* Type of code to build for inflate_table() */
 typedef enum {

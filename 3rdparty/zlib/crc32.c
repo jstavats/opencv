@@ -20,6 +20,13 @@
   produced, so that this one source file can be compiled to an executable.
  */
 
+#if defined(WITH_IPP)
+/*
+ * This file is modified with Intel(R) Integrated Performance Primitives library content
+ */
+#include "ippdc.h"
+#endif
+
 #ifdef MAKECRCH
 #  include <stdio.h>
 #  ifndef DYNAMIC_CRC_TABLE
@@ -638,6 +645,7 @@ unsigned long ZEXPORT crc32_z(crc, buf, len)
         val = *buf++;
         __asm__ volatile("crc32b %w0, %w0, %w1" : "+r"(crc) : "r"(val));
     }
+<<<<<<< Updated upstream
 
     /* Prepare to compute the CRC on full 64-bit words word[0..num-1]. */
     word = (z_word_t const *)buf;
@@ -663,6 +671,28 @@ unsigned long ZEXPORT crc32_z(crc, buf, len)
         crc = multmodp(Z_BATCH_ZEROS, crc) ^ crc1;
         crc = multmodp(Z_BATCH_ZEROS, crc) ^ crc2;
     }
+=======
+#endif /* BYFOUR */
+#if defined(WITH_IPP)
+    {
+        Ipp32u resCRC32 = (Ipp32u)crc;
+
+        ippsCRC32_8u(buf, len, &resCRC32);
+        return ((unsigned long)resCRC32 & 0xffffffff);
+    }
+#else
+    crc = crc ^ 0xffffffffUL;
+    while (len >= 8) {
+        DO8;
+        len -= 8;
+    }
+    if (len) do {
+        DO1;
+    } while (--len);
+    return crc ^ 0xffffffffUL;
+#endif
+}
+>>>>>>> Stashed changes
 
     /* Do one last smaller batch with the remaining words, if there are enough
        to pay for the combination of CRCs. */

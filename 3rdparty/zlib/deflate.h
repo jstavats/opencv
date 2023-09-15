@@ -267,7 +267,13 @@ typedef struct internal_state {
      * longest match routines access bytes past the input.  This is then
      * updated to the new high water mark.
      */
-
+#if defined(WITH_IPP)
+    int             last_flag_set;
+    int             need_hdr;
+    void            *deflate_stat;
+    void            *deflate_table;
+    int             deflate_table_len;
+#endif
 } FAR deflate_state;
 
 /* Output a byte on the stream.
@@ -295,6 +301,9 @@ void ZLIB_INTERNAL _tr_init OF((deflate_state *s));
 int ZLIB_INTERNAL _tr_tally OF((deflate_state *s, unsigned dist, unsigned lc));
 void ZLIB_INTERNAL _tr_flush_block OF((deflate_state *s, charf *buf,
                         ulg stored_len, int last));
+#if defined(WITH_IPP)
+void ZLIB_INTERNAL _tr_end_block_fastest OF((deflate_state *s, int last));
+#endif
 void ZLIB_INTERNAL _tr_flush_bits OF((deflate_state *s));
 void ZLIB_INTERNAL _tr_align OF((deflate_state *s));
 void ZLIB_INTERNAL _tr_stored_block OF((deflate_state *s, charf *buf,
@@ -341,6 +350,18 @@ void ZLIB_INTERNAL _tr_stored_block OF((deflate_state *s, charf *buf,
 # define _tr_tally_lit(s, c, flush) flush = _tr_tally(s, 0, c)
 # define _tr_tally_dist(s, distance, length, flush) \
               flush = _tr_tally(s, distance, length)
+#endif
+#if defined(WITH_IPP)
+#define CUST_TAB_WINSIZE    (0x8000)
+#define CUST_TAB_HASHSIZE   (0x8000)
+#define LIT_TAB_SIZE       (286)
+#define DIST_TAB_SIZE      (30)
+
+#define DEFLATE_TAB_SIZE (sizeof(Ipp8u) * CUST_TAB_WINSIZE + sizeof(Ipp32s) * CUST_TAB_HASHSIZE + sizeof(int) * LIT_TAB_SIZE + sizeof(int) * DIST_TAB_SIZE)
+
+/* functions to work with deflate custom tables at "fastest" level */
+   local int ZEXPORT custDeflateUpdateTable OF((deflate_state*, unsigned char*, int));
+   ZEXTERN int ZEXPORT custDeflateFinishTable OF((z_streamp));
 #endif
 
 #endif /* DEFLATE_H */

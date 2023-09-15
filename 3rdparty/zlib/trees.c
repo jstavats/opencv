@@ -31,6 +31,13 @@
  */
 
 /* @(#) $Id$ */
+#if defined(WITH_IPP)
+/*
+ * This source code file was modified with Intel(R) Integrated Performance Primitives library content
+ */
+#include "ippdc.h"
+#include "ipps.h"
+#endif
 
 /* #define GEN_TREES_H */
 
@@ -977,8 +984,20 @@ void ZLIB_INTERNAL _tr_flush_block(s, buf, stored_len, last)
     } else if (s->strategy == Z_FIXED || static_lenb == opt_lenb) {
 #endif
         send_bits(s, (STATIC_TREES<<1)+last, 3);
+#if !defined(WITH_IPP)
         compress_block(s, (const ct_data *)static_ltree,
                        (const ct_data *)static_dtree);
+#else
+        {
+            IppStatus status;
+            status = ippsDeflateHuff_8u( (const Ipp8u*)s->l_buf, (const Ipp16u*)s->d_buf, (Ipp32u)s->last_lit,
+                                       (Ipp16u*)&s->bi_buf, (Ipp32u*)&s->bi_valid,
+                                       (IppDeflateHuffCode*)static_ltree, (IppDeflateHuffCode*)static_dtree,
+                                       (Ipp8u*)s->pending_buf, (Ipp32u*)&s->pending );
+            Assert( ippStsNoErr == status, "ippsDeflateHuff_8u returned a bad status" );
+            send_code(s, END_BLOCK, static_ltree);
+        }
+#endif
 #ifdef ZLIB_DEBUG
         s->compressed_len += 3 + s->static_len;
 #endif
@@ -986,8 +1005,20 @@ void ZLIB_INTERNAL _tr_flush_block(s, buf, stored_len, last)
         send_bits(s, (DYN_TREES<<1)+last, 3);
         send_all_trees(s, s->l_desc.max_code+1, s->d_desc.max_code+1,
                        max_blindex+1);
+#if !defined(WITH_IPP)
         compress_block(s, (const ct_data *)s->dyn_ltree,
                        (const ct_data *)s->dyn_dtree);
+#else
+        {
+            IppStatus status;
+            status = ippsDeflateHuff_8u( (const Ipp8u*)s->l_buf, (const Ipp16u*)s->d_buf, (Ipp32u)s->last_lit,
+                                       (Ipp16u*)&s->bi_buf, (Ipp32u*)&s->bi_valid,
+                                       (IppDeflateHuffCode*)s->dyn_ltree, (IppDeflateHuffCode*)s->dyn_dtree,
+                                       (Ipp8u*)s->pending_buf, (Ipp32u*)&s->pending );
+            Assert( ippStsNoErr == status, "ippsDeflateHuff_8u returned a bad status" );
+        }
+        send_code(s, END_BLOCK, s->dyn_ltree);
+#endif
 #ifdef ZLIB_DEBUG
         s->compressed_len += 3 + s->opt_len;
 #endif
@@ -1007,6 +1038,41 @@ void ZLIB_INTERNAL _tr_flush_block(s, buf, stored_len, last)
     Tracev((stderr,"\ncomprlen %lu(%lu) ", s->compressed_len>>3,
            s->compressed_len-7*last));
 }
+
+#if defined(WITH_IPP)
+void ZLIB_INTERNAL _tr_end_block_fastest(deflate_state *s, int last)         /* one if this is the last block for a file */
+{
+    if(s->deflate_table == 0 && s->need_hdr == 0)
+    {
+        send_code(s, END_BLOCK, static_ltree);
+    } else if(s->deflate_table != NULL && s->need_hdr == 0)
+    {
+        IppDeflateHuffCode *p_lit_codes;
+
+        p_lit_codes = (IppDeflateHuffCode*)s->deflate_table;
+        send_bits(s, (int)p_lit_codes[END_BLOCK].code, (int)p_lit_codes[END_BLOCK].len);
+        s->block_start = 0;
+        s->match_start = 0;
+        s->need_hdr = 1;
+        /* Clear hash next trained table call */
+        ippsSet_32s( -((Ipp32s)s->w_size), (Ipp32s*)s->head, s->level < 0? (int)s->hash_size * 2 : (int)s->hash_size);
+    }
+    s->need_hdr = 1;
+    init_block(s);
+    if (last) {
+        if(!s->last_flag_set) {
+            _tr_stored_block(s, NULL, 0, 1);            /* Push finishing stored block of 0 bytes */
+            s->last_flag_set = 1;
+        }
+        bi_windup(s);
+#ifdef DEBUG
+        s->compressed_len += 7;  /* align on byte boundary */
+#endif
+    }
+    Tracev((stderr,"\ncomprlen %lu(%lu) ", s->compressed_len>>3,
+           s->compressed_len-7*last));
+}
+#endif
 
 /* ===========================================================================
  * Save the match info and tally the frequency counts. Return true if

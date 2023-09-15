@@ -1,0 +1,2357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Intel&#174; Integrated Performance Primitives Examples</title>
+<style type="text/css">
+/* 
+intel_css_styles.css
+CSS for installed help on all supported operating systems.
+Version information:
+1.1.26.2015 - Initial version with all changes.
+1.2.18.2015 - Minor changes after review. Change spacings in several elements.
+1.3.05.2015 - Removed web font declarations. Cleaned up formatting.
+1.3.11.2015 - Changed default margins for body content.
+
+Colors used in definitions:
+Intel Blue: #0071C5 - heading level color, links in body, other common elements.
+White: #FFFFFF - body background, various elements.
+Black: #000000 - text color for all normal text
+Gray20: #333333 - body text and some headings
+Gray80: #CCCCCC - Note shadow
+White Smoke: #F5F5F5 - alternate row color in tables
+Canary: #FFFF99 - review background color
+User defined: #E2E7EB; - Note background
+User defined: #00aeef - hover links
+User defined: green or #007F00 - specific language elements
+*/
+/* ------------------------------------------------- */
+/* Default body style */
+body{
+    color:#333333;
+    background-color :#ffffff;
+    font-family: "Intel Clear", Verdana, Arial, sans-serif; 
+    font-size: 10pt;
+    margin-left: 30px;
+	margin-right: 30px;
+	margin-bottom: 7%;
+}
+/* ------------------------------------------------- */
+/* Special mark ups                                  */
+.RevUpdate{
+    background-color:#FFFF99;
+    font-weight:normal;
+	line-height:100%;
+}
+/*.Fortran95 {*/
+.NonStdFortran{
+	color: #007F00; 
+}
+/* Help 3 body style overriding default MSHV behavior */
+body.OH_VSIP_body{
+    margin-left:30px;
+}
+DIV.OH_outerContent{
+    border:0px none #FFFFFF;
+}
+/* ------------------------------------------------- */
+/* Title headings styles                             */
+h1{
+    color:#0071c5;
+    font-size:15pt;
+    font-weight:normal;
+    padding-bottom:1px;
+    margin-left:0pt;
+    margin-bottom:0px;
+}
+h1.firsttitle{
+   font-weight: normal;
+   border-bottom: 0 none;
+   margin-left: 0;
+   font-size: 18pt;
+   border-bottom: 1px solid #0071c5;
+   line-height: 100%; 
+   padding-bottom: 10px;
+   margin-bottom: 20px;
+   margin-top: 20px;
+}
+h2{
+    color:#0071c5;
+    margin-top: 15pt;
+    margin-bottom: 5pt;
+    font-size: 12pt;
+}
+h3{
+    color:#333333;
+    font-weight:bold;
+    margin-top: 15pt;
+    margin-bottom:5pt;
+    font-size:11pt;
+}
+h4, h5, h6{
+    color: #0071c5;
+    margin-top: 10pt;
+	margin-bottom: 5pt;
+    padding-left: 0px;
+    font-size: 10pt;
+}
+.relinfo{
+    padding-left:30px;
+}
+span.tablecap {
+ color: #0071c5;
+}
+caption{
+	font-size:10pt;
+    font-weight:bold;
+	text-align: left;
+}
+.figcap{
+    margin-left:24px;
+    font-size:10pt;
+    font-weight:bold;
+    text-align:center;
+}
+.sectiontitle{
+    padding-left:0px;
+}
+.linklist{
+    padding-left:0px;
+}
+h1.topictitle1{
+   	color: #0071c5;
+    font-size: 18pt;
+    margin-left:0pt;
+    margin-bottom:15px;
+}
+#header_text {
+ color: #0071C5;
+ text-align: right;
+}
+.titlepage{
+    margin-right:15%;
+}
+/* ------------------------------------------------- */
+/* Link styles                                       */
+a:link{
+    color:#0071c5;
+    text-decoration:none;
+}
+a:active{
+    color:#0071c5;
+    text-decoration:underline;
+}
+a:visited{
+    color:#0071c5;
+    text-decoration:none;
+}
+a:hover{
+    color:#00aeef;
+	text-decoration:underline;
+}
+.familylinks{
+    margin-top:1em;
+}
+a.start{
+    font-size:18pt;
+    text-decoration:underline;
+}
+a:active.start{
+    color:#0071c5;
+    text-decoration:underline;
+}
+a:visited.start{
+    color:#0071c5;
+    text-decoration:underline;
+}
+a.underlined{
+    text-decoration:underline;
+}
+a:active.underlined{
+    color:#0071c5;
+    text-decoration:underline;
+}
+a:visited.underlined{
+    color:#0071c5;
+    text-decoration:underline;
+}
+/* ------------------------------------------------- */
+/* Paragraph styles                                  */
+.shortdesc{
+    font-size:inherit;
+    padding-left:inherit;
+    line-height:16pt;
+    margin-top:0px;
+    margin-bottom:0.5em;
+}
+.shortdesc-it{
+    font-style:italic;
+}
+p{
+    font-size:inherit;
+    margin-left:0px;
+    line-height:120%;
+    margin-top:0;
+    margin-bottom:10px;
+}
+.p{
+    font-size:inherit;
+    margin-left:0px;
+    line-height:170%;
+    margin-top:0;
+    margin-bottom:5pt;
+    padding-left:0pt;
+}
+/* ------------------------------------------------- */
+/* Table styles                                      */
+table{
+    margin-bottom:5pt;
+    border-collapse:collapse;
+    margin-left:0px;
+    margin-top:0.3em;
+    font-size:10pt;
+}
+tr{
+    vertical-align:top;
+}
+tr:nth-child(odd){ 
+background-color:#FFFFFF; 
+}
+tr:nth-child(even){
+background-color:#F5F5F5;
+}
+th, th h3{
+    padding:4px;
+    text-align:left;
+    background-color:#0071C5;
+	font-weight: normal;
+    margin-top: 1px;
+    margin-bottom: 0px;
+    color:#FFFFFF;
+	font-size: inherit;
+}
+th{
+    border:1px #dddddd solid;
+    padding-top:2px;	 	 
+    padding-bottom:0px;
+    padding-right:3px;	 	 
+    padding-left:3px;
+}
+td{
+    border:1px #dddddd solid;
+    vertical-align:top;
+    font-size:100%;
+    text-align:left;
+    margin-bottom:0;
+}
+td, td p{
+    margin-top:0;
+    margin-left:0;
+    text-align:left;
+    font-size:inherit;
+    line-height:120%;
+}
+td p{
+    margin-bottom:0;
+    padding-top:5px;
+    padding-bottom:5px;
+    padding-right:5px;
+    padding-left:1px;
+}
+.noborder{
+    border:0px none;
+}
+.noborder1stcol{
+    border:0px none;
+    padding-left:0pt;
+}
+td ol{
+    font-size:inherit;
+    margin-left:28px;
+}
+td ul{
+    font-size:inherit;
+    margin-left:24px;
+}
+.DefListTbl{
+    width:90%;
+    margin-left:-3pt;
+}
+.syntaxdiagramtbl{
+    margin-left:-3pt;
+}
+.sdtbl{
+}
+.sdrow{
+}
+.sdtblp{
+    border:0px none;
+    font-size:inherit;
+    line-height:120%;
+    margin-bottom:0;
+    padding-bottom:0px;
+    padding-top:5px;
+    padding-left:0px;
+    padding-right:5px;
+    vertical-align:top;
+}
+.idepara, .ide_para{
+    border:0px none;
+    font-size:inherit;
+    line-height:120%;
+    margin-bottom:0;
+    padding-bottom:0px;
+    padding-top:5px;
+    padding-left:0px;
+    padding-right:5px;
+    vertical-align:top;
+}
+/* ------------------------------------------------- */
+/* Note styles */
+div.Note{
+    margin-top:10px;
+    margin-left:15px;
+    margin-bottom:10px;
+    padding-left:10px;
+    padding-right:5px;
+    padding-bottom:5px;
+    background-color:#E2E7EB;
+	margin-right: 15%;
+	border-top: 1px solid #0071c5;
+	border-bottom: 1px solid #0071c5;
+}
+dd div.Note{
+    margin-top:10px;
+}
+h3.NoteTipHead{
+    color:#0071c5;
+    padding-top:5px;
+    text-transform:uppercase;
+	margin-top: 0pt;
+	margin-bottom: 0pt;
+}
+h3.NoteTipHead img{
+    vertical-align:middle;
+}
+P.Note{
+    margin-top:10px;
+    margin-left:15px;
+    margin-bottom:10px;
+    padding-left:10px;
+    padding-right:5px;
+    padding-bottom:5px;
+    background-color:#E2E7EB;
+	margin-right: 15%;
+	border-top: 1px solid #0071c5;
+	border-bottom: 1px solid #0071c5;
+}
+/* ------------------------------------------------- */
+/* Misc. */
+blockquote{
+    margin-top:0;
+    margin-bottom:0;
+}
+HR{
+    color:#0071c5;
+    border:0;
+    height:1px;
+    margin-left:0;
+}
+/* ------------------------------------------------- */
+/* List styles */
+.simple{
+    list-style:none;
+}
+ul{
+	margin-bottom:1em;    
+	font-size:inherit;
+    line-height:130%;
+    list-style-image:url();
+    margin-top:0px;
+}
+ol{
+    font-size:inherit;
+    line-height:130%;
+    list-style-type:decimal;
+    margin-top:0px;
+    margin-bottom:1em;
+}
+ol.num{
+    font-size:inherit;
+    line-height:130%;
+    list-style-type:decimal;
+    margin-bottom:1em;
+    margin-top:0px;
+}
+ol.abc{
+    font-size:inherit;
+    line-height:130%;
+    list-style-type:lower-alpha;
+    margin-bottom:1em;
+    margin-top:0px;
+}
+ol.ABC{
+    font-size:inherit;
+    line-height:130%;
+    list-style-type:upper-alpha;
+    margin-bottom:1em;
+    margin-top:0px;
+}
+ol.roman{
+    font-size:inherit;
+    line-height:130%;
+    list-style-type:lower-roman;
+    margin-bottom:1em;
+    margin-top:0px;
+}
+ol.Roman{
+    font-size:inherit;
+    line-height:130%;
+    list-style-type:upper-roman;
+    margin-bottom:1em;
+    margin-top:0px;
+}
+ol ol{
+    margin-left:24px;
+    list-style:lower-alpha;
+    margin-bottom:0em;
+    font-size:inherit;
+}
+ul ol{
+    margin-left:24px;
+    list-style-image:url();
+    list-style-type:decimal;
+    margin-bottom:0em;
+    font-size:inherit;
+}
+ul ul{
+    font-size:inherit;
+    margin-bottom:0px;
+    margin-left:18px;
+}
+ul ul li p{
+    list-style:url();
+}
+ol ul{
+    font-size:inherit;
+    margin-bottom:0px;
+    margin-left:17px;
+}
+ul li p{
+    font-size:inherit;
+    line-height:130%;
+}
+ul.nobullet{
+    list-style:none;
+}
+dd ul,
+dd p ul{
+    list-style:url();
+}
+dd ul{
+    margin-left:16px;
+    font-size:inherit;
+}
+dd ol{
+    margin-left:24px;
+    font-size:inherit;
+}
+li{
+    font-size:inherit;
+    line-height:130%;
+    margin-top:0px;
+}
+li p, ol p, ul p{
+    margin-bottom:0.2em;
+    margin-top:0.2em;
+    margin-left:0;
+    padding-left:0;
+    font-size:inherit;
+}
+li table, td table, dd table{
+    margin-left:0;
+}
+indent li p{
+    margin-bottom:0.2em;
+    margin-top:0.2em;
+    margin-left:-2em;
+}
+P.Preformatted, pre{
+    background-color:#f5f5f5;
+    font-size:inherit;
+    font-family:"Courier New", Courier, monospace;
+    line-height:110%;
+    margin-bottom:0;
+    margin-bottom:10px;
+    margin-top:0;
+    x-text-tab-stops:repeat 1in;
+}
+td P.Preformatted,
+pre{
+    background-color:#f5f5f5;
+    font-size:10pt;
+    font-family:"Courier New", Courier, monospace;
+    margin-bottom:10px;
+    margin-left:0px;
+    margin-top:0;
+    x-text-tab-stops:repeat 1in;
+}
+ul.ullinks{
+    margin-left:0px;
+    margin-bottom:1em;
+    font-size:inherit;
+    line-height:100%;
+    margin-top:0px;
+    margin-left:16px;
+}
+/* ------------------------------------------------- */
+/* Definition list */
+dl{
+    font-size:inherit;
+    margin-bottom:0px;
+    margin-left:0px;
+    margin-top:0px;
+}
+dt{
+    margin-left:0em;
+    margin-top:0em;
+    margin-bottom:0em;
+    width:100px;
+}
+.dlterm{
+    margin-left:0em;
+    margin-top:0em;
+    margin-bottom:0em;
+    width:100px;
+}
+dd{
+    font-size:inherit;
+    margin-left:0px;
+    position:relative;
+    top:-13pt;
+    left:110px;
+    width:70%;
+    line-height:14pt;
+    margin-top:0em;
+    margin-bottom:-10pt;
+}
+dd.biblio{
+    font-size:inherit;
+    margin-left:0px;
+    position:relative;
+    top:-14pt;
+    left:140px;
+    width:60%;
+    line-height:14pt;
+    margin-top:0em;
+    margin-bottom:0em;
+}
+.DefListTbl{
+    width:90%;
+}
+table.argTbl{
+    width:75%;
+}
+.dlsyntax{
+    margin-left:0px;
+    padding-left:0px;
+    font-size:inherit;
+    margin-top:-1px;
+    line-height:150%;
+}
+.dtsyntax{
+    margin-bottom:-1.125em;
+    margin-left:0em;
+    margin-top:0em;
+    width:100px;
+}
+.ddsyntax{
+    font-size:inherit;
+    margin-left:0px;
+    position:relative;
+    top:-4pt;
+    left:110px;
+    width:70%;
+    line-height:14pt;
+    margin-bottom:-1em;
+}
+.dlsyntaxpara{
+    margin-left:0px;
+    margin-bottom:1em;
+    font-size:inherit;
+    line-height:150%;
+}
+.syntaxnote{
+    margin-left:0px;
+    padding-left:0px;
+    font-size:inherit;
+    margin-top:-5px;
+    line-height:150%;
+}
+.syntaxnote-orig{
+    margin-left:135px;
+    margin-bottom:1em;
+    padding-left:30px;
+    font-size:inherit;
+    margin-top:-1px;
+    line-height:150%;
+}
+/* "dl" style for ""ReturnValues" */
+.dlretval{
+    margin-left:24px;
+    margin-bottom:2em;
+    padding-left:30px;
+    font-size:inherit;
+    margin-top:-1px;
+    line-height:150%;
+    width:90%;
+}
+/* "dt" style for ""ReturnValues" */
+.dtretval{
+    margin-left:0em;
+    margin-top:0em;
+    margin-bottom:-1.25em;
+    width:400px;
+}
+/* "dd" style for ""ReturnValues" */
+.ddretval{
+    font-size:inherit;
+    margin-left:0px;
+    position:relative;
+    top:-4pt;
+    left:300px;
+    margin-bottom:0;
+}
+dd p{
+    margin-bottom:0em;
+    margin-top:0em;
+    margin-left:0;
+    padding-left:0;
+    font-size:inherit;
+}
+dd dl{
+    margin-left:0px;
+}
+/* ------------------------------------------------- */
+/* Inline Styles */
+SPAN.Big{
+    font-weight:bold;
+    font-size:105%;
+}
+SPAN.Code, .Code{
+    font-family:"Courier New", Courier, monospace;
+}
+.code{
+    background-color:#F5F5F5;
+    font-family:"Courier New", Courier, monospace;
+    font-size:10pt;
+    line-height:118%;
+    margin-top:0.0em;
+    margin-bottom:0.0em;
+    padding-left:0px;
+    white-space:pre;
+}
+code{
+    background-color:#F5F5F5;
+    font-family:"Courier New", Courier, monospace;
+    font-size:10pt;
+    line-height:118%;
+    margin-top:0.0em;
+    margin-bottom:0.0em;
+    padding-left:0px;
+    white-space:pre;
+}
+strong{
+    font-size:inherit;
+}
+sup,
+sub{
+    vertical-align:0;
+    position:relative;
+}
+sub{
+    top:0.8ex;
+}
+sup{
+    bottom:1ex;
+}
+tt{
+    font-family:"Courier New", Courier, monospace;
+}
+.b{
+    font-weight:bold;
+}
+.boldspan{
+    font-weight:bold;
+}
+.bgcolorgray{
+    background-color:#999999;
+}
+.bi{
+    font-style:italic;
+    font-weight:bold;
+}
+.bt{
+    font-family:times;
+    font-weight:bold;
+}
+.codeph{
+    font-family:"Courier New", Courier, monospace;
+}
+.delim{
+    font-family:"Courier New", Courier, monospace;
+}
+.eq{
+    margin-bottom:1em;
+}
+.eqsymbol{
+    font-family:'Times New Roman', sans-serif;
+    font-size:12pt;
+}
+.imagecenter{
+    text-align:center;
+}
+.tfootnote{
+    font-size:8pt;
+}
+.italic{
+    font-style:italic;
+}
+.keyword{
+    font-family:"Courier New", Courier, monospace;
+    font-weight:normal;
+}
+.keywordb{
+    font-family:"Courier New", Courier, monospace;
+    font-weight:bold;
+}
+.keywordtt{
+    font-family:"Courier New", Courier, monospace;
+    font-weight:normal;
+}
+.keywordbt{
+    font-family:"Courier New", Courier, monospace;
+    font-weight:bold;
+}
+.keywordit{
+    font-family:"Courier New", Courier, monospace;
+    font-style:italic;
+    font-weight:inherit;
+}
+.keywordbi{
+    font-family:"Courier New", Courier, monospace;
+    font-weight:bold;
+    font-style:italic;
+}
+.keywordn{
+    font-family:"Courier New", Courier, monospace;
+    font-style:normal;
+    font-weight:normal;
+}
+h1 .keyword, h2 .keyword, h3 .keyword{
+    font-family:"Courier New", Courier, monospace;
+    font-weight:bold;
+}
+.kwd{
+    font-family:"Courier New", Courier, monospace;
+}
+.option{
+    font-family:"Courier New", Courier, monospace;
+}
+.optionb{
+    font-family:"Courier New", Courier, monospace;
+    font-weight:bold;
+}
+.optiontt{
+    font-family:"Courier New", Courier, monospace;
+    font-weight:normal;
+}
+.optionbt{
+    font-family:"Courier New", Courier, monospace;
+    font-weight:bold;
+}
+.optionit{
+    font-family:"Courier New", Courier, monospace;
+    font-style:italic;
+    font-weight:inherit;
+}
+.optionbi{
+    font-family:"Courier New", Courier, monospace;
+    font-weight:bold;
+    font-style:italic;
+}
+.optionn{
+    font-family:"Courier New", Courier, monospace;
+    font-style:normal;
+    font-weight:normal;
+}
+.oper{
+    font-family:"Courier New", Courier, monospace;
+}
+.parmname{
+    font-style:italic;
+    font-family:"Courier New", Courier, monospace;
+    font-weight:normal;
+}
+.parmnameb{
+    font-family:"Courier New", Courier, monospace;
+    font-style:italic;
+    font-weight:bold;
+}
+.parmnamett{
+    font-family:"Courier New", Courier, monospace;
+    font-style:normal;
+    font-weight:normal;
+}
+.parmnamebt{
+    font-family:"Courier New", Courier, monospace;
+    font-style:normal;
+    font-weight:bold;
+}
+.parmnamen{
+    font-family:"Courier New", Courier, monospace;
+    font-style:normal;
+    font-weight:normal;
+}
+.sep{
+    font-family:"Courier New", Courier, monospace;
+}
+.tenpt{
+    font-size:8pt;
+}
+.tt{
+    font-family:"Courier New", Courier, monospace;
+}
+.var{
+    font-style:italic;
+    font-family:"Courier New", Courier, monospace;
+}
+.equation{
+    font-style:italic;
+    font-family:"Times New Roman", monospace;
+}
+.varname{
+    font-style:italic;
+    font-family:"Courier New", monospace;
+}
+.varnameb{
+    font-family:"Courier New", monospace;
+    font-style:italic;
+    font-weight:bold;
+}
+.varnamebo{
+    font-family:"Courier New", monospace;
+    font-style:italic;
+    font-weight:bold;
+    text-decoration:overline
+}
+.varnamebt{
+    font-family:"Courier New", monospace;
+    font-style:normal;
+    font-weight:bold;
+}
+.varnamebu{
+    font-family:"Courier New", monospace;
+    font-style:italic;
+    font-weight:bold;
+    text-decoration:underline
+}
+.varnamett{
+    font-family:"Courier New", monospace;
+    font-style:normal;
+    font-weight:normal;
+}
+.varnamen{
+    font-family:"Courier New", monospace;
+    font-style:normal;
+    font-weight:normal;
+}
+.overline{
+    text-decoration:overline
+}
+.underline{
+    text-decoration:underline
+}
+.filepath{
+    font-style:normal;
+    font-family:"Courier New", Courier, monospace;
+}
+.h3titleblue{
+    color:#0071c5;
+    font-weight:lighter;
+    margin-top:5pt;
+    margin-bottom:0;
+    font-size:13pt;
+}
+.Context_StepsIntro{
+    font-weight:bold;
+}
+.docfeedback{
+    margin-top:15px;
+    margin-left:0pt;
+    margin-bottom:0px;
+    border-top:1px solid #cccccc;
+	font-weight: normal;
+}
+.noBgrnd{
+    background-image:none;
+}
+.dropPara{
+    float:left;
+}
+</style>
+</head>
+<body class="book">
+<div id="header">
+<h1>Intel&#174; Integrated Performance Primitives Examples</h1>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<h1 id="disclaimer" style="font-size:6pt; color:#FFFFFF; border-style:hidden; margin:0px;">Disclaimer</h1>
+
+<font size="-3">
+<p><font size="-3"><h2 id="_legal_information">Legal Information</h2>
+INFORMATION IN THIS DOCUMENT IS PROVIDED IN CONNECTION WITH INTEL PRODUCTS.
+NO LICENSE, EXPRESS OR IMPLIED, BY ESTOPPEL OR OTHERWISE, TO ANY INTELLECTUAL
+PROPERTY RIGHTS IS GRANTED BY THIS DOCUMENT. EXCEPT AS PROVIDED IN INTEL'S
+TERMS AND CONDITIONS OF SALE FOR SUCH PRODUCTS, INTEL ASSUMES NO LIABILITY
+WHATSOEVER, AND INTEL DISCLAIMS ANY EXPRESS OR IMPLIED WARRANTY, RELATING
+TO SALE AND/OR USE OF INTEL PRODUCTS INCLUDING LIABILITY OR WARRANTIES
+RELATING TO FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABILITY, OR INFRINGEMENT
+OF ANY PATENT, COPYRIGHT OR OTHER INTELLECTUAL PROPERTY RIGHT.<br>
+A   "Mission Critical Application" is any application in which failure of the   Intel Product could result,
+directly or indirectly, in personal injury or death.   SHOULD YOU PURCHASE OR USE INTEL'S PRODUCTS FOR ANY
+SUCH MISSION CRITICAL   APPLICATION, YOU SHALL INDEMNIFY AND HOLD INTEL AND ITS SUBSIDIARIES,
+SUBCONTRACTORS AND AFFILIATES, AND THE DIRECTORS, OFFICERS, AND EMPLOYEES OF   EACH, HARMLESS AGAINST ALL
+CLAIMS COSTS, DAMAGES, AND EXPENSES AND REASONABLE   ATTORNEYS' FEES ARISING OUT OF, DIRECTLY OR INDIRECTLY,
+ANY CLAIM OF PRODUCT   LIABILITY, PERSONAL INJURY, OR DEATH ARISING IN ANY WAY OUT OF SUCH MISSION CRITICAL
+APPLICATION, WHETHER OR NOT INTEL OR ITS SUBCONTRACTOR WAS NEGLIGENT IN   THE DESIGN, MANUFACTURE, OR  WARNING
+OF THE INTEL PRODUCT OR ANY OF ITS PARTS.</font></p> </font>
+
+<p><font size="-3"> Intel may make changes to specifications and product descriptions at any time,
+  without notice. Designers must not rely on the absence or characteristics of any
+  features or instructions marked "reserved" or "undefined." Intel reserves these
+  for future definition and shall have no responsibility whatsoever for conflicts
+  or incompatibilities arising from future changes to them. The information here
+  is subject to change without notice. Do not finalize a design with this
+  information. <br>
+  The products described in this document may contain design defects or errors
+  known as errata which may cause the product to deviate from published
+  specifications. Current characterized errata are available on request. <br>
+  Contact your local Intel sales office or your distributor to obtain the latest
+  specifications and before placing your product order. <br>
+  Copies of documents which have an order number and are referenced in this
+  document, or other Intel literature, may be obtained by calling 1-800-548-4725,
+  or go to:
+  http://www.intel.com/design/literature.htm<br></font></p>
+  <p><font size="-3"> Intel processor numbers are not a measure of performance. Processor numbers
+  differentiate features within each processor family, not across different
+  processor families. Go to: <a href="http://www.intel.com/products/processor_number"> http://www.intel.com/products/processor_number/</a></font></p>
+
+<p><font size="-3"> BlueMoon, BunnyPeople, Celeron, Celeron Inside, Centrino, Centrino Inside, Core Inside,
+  i960, Intel, the Intel logo, Intel Atom, Intel Atom Inside, Intel Core,
+  Intel Inside, Intel Inside logo, Intel NetBurst, Intel NetMerge,
+  Intel NetStructure, Intel SingleDriver, Intel SpeedStep,
+  Intel Sponsors of Tomorrow., the Intel Sponsors of Tomorrow. logo,
+  Intel StrataFlash, Intel Viiv, Intel vPro, Intel XScale, InTru, the InTru logo,
+  InTru soundmark, Itanium, Itanium Inside, MCS, MMX, Moblin, Pentium,
+  Pentium Inside, skoool, the skoool logo, Sound Mark, The Journey Inside,
+  vPro Inside, VTune, Xeon, and Xeon Inside
+  are trademarks of Intel Corporation in the U.S. and other countries. <br>
+  * Other names and brands may be claimed as the property of others. </font></p>
+
+<p><font size="-3"> Microsoft, Windows, Visual Studio, Visual C++, and the Windows logo are
+  trademarks, or registered trademarks of Microsoft Corporation
+  in the United States and/or other countries. </font></p>
+
+<p><font size="-3">Java is a registered trademark of Oracle and/or its affiliates. </font></p>
+
+<p><font size="-3">&copy;Intel Corporation. All rights reserved.</font></p>
+
+
+
+<p id="IPP_EXAMPLES_OptNotice">
+<div class="tablenoborder">
+<table cellpadding="4" summary="" id="d3135e12" frame="border" border="1" cellspacing="0" rules="all">
+  <thead align="left">
+    <tr><th class="cellrowborder" align="left" valign="top" width="100%" id="d157258e36"><p>Optimization Notice</p></th></tr>
+  </thead>
+
+  <tbody>
+    <tr><td class="bgcolor(#ccecff)" bgcolor="#ccecff" valign="top" width="100%" headers="d157258e36 ">
+    <p>Intel's compilers may or may not optimize to the same degree for non-Intel microprocessors for optimizations that are not
+    unique to Intel microprocessors. These optimizations include SSE2, SSE3, and SSSE3 instruction sets and
+    other optimizations. Intel does not guarantee the availability, functionality, or effectiveness of
+    any optimization on microprocessors not manufactured by Intel.
+    <br>
+    <br>
+    Microprocessor-dependent optimizations in this product are intended for use with Intel microprocessors. Certain optimizations not specific to Intel microarchitecture are reserved for Intel microprocessors. Please refer to the applicable product User and Reference Guides for more information regarding the specific instruction sets covered by this notice.</p>
+    <p>Notice revision #20110804 </p>
+    </td></tr>
+  </tbody>
+</table>
+</div>
+</p>
+</div>
+</div>
+<h1 id="_license_definitions">License Definitions</h1>
+<div class="paragraph"><p>By downloading and installing this product, you hereby agree that the
+accompanying materials are being provided to you under the terms and
+conditions of the End User License Agreement for the Intel&#174;
+Integrated Performance Primitives (Intel&#174; IPP) product previously accepted by you.</p></div>
+<h1 id="_system_requirements">System Requirements</h1>
+<div class="paragraph"><p>Recommended hardware:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+A system based on 4th Generation Intel&#174; Core&#8482; i3, i5, i7 or newer processor
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Hardware requirements:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+A system based on Intel&#174; Quark&#8482; System-on-Chip processors;
+</p>
+</li>
+<li>
+<p>
+A system based on Intel&#174; Pentium&#174; processor, Intel&#174; Xeon&#174; processor, or subsequent IA-32
+architecture based system;
+</p>
+</li>
+<li>
+<p>
+A system based on a processor with Intel&#174; 64 architecture.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Software requirements:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+For the basic system requirements on operating system, Intel&#174; IPP library, IDE and compiler, refer to
+the corresponding Release Notes document.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>For more information please see
+<a href="http://software.intel.com/en-us/intel-ipp/">Intel&reg; IPP System Requirements</a>.</p></div>
+<h1 id="_what_8217_s_new">What&#8217;s New</h1>
+<div class="paragraph"><p>The following updates have been made to Intel&#174; IPP functions for Zlib:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Significantly improved performance of the data compression functions without degradation of the compression ratio
+</p>
+</li>
+<li>
+<p>
+Implemented a new fastest data compression mode. The compression ratio of the
+new mode is a bit less than the fast mode&#8217;s ratio - compression level 1, but
+performance is significantly better. To use this mode, specify the negative
+compression level equal to -2 (since -1 is used for default compression level
+in Zlib) when calling the <span class="monospaced">deflateInit</span> function:
+</p>
+</li>
+</ul></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>    deflateInit(&amp;deflate_stream, -2);</pre>
+</div></div>
+<div class="paragraph"><p>You can use symbolic name <span class="monospaced">Z_IPP_FAST_COMPRESSION</span>, which is equal to -2:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>    deflateInit(&amp;deflate_stream, Z_IPP_FAST_COMPRESSION);</pre>
+</div></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Introduced new sub-ranges of compression levels from 11 to 29
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+The standard levels 1..9 are compatible with original Zlib
+</p>
+</li>
+<li>
+<p>
+Levels 11..19 are similar to 1..9, but fit better when compressing large files
+(more than 1 MB)
+</p>
+</li>
+<li>
+<p>
+Levels 21..29 are for highly compressible files with compression
+ratio equal to 30x and higher.
+</p>
+</li>
+</ul></div>
+</li>
+<li>
+<p>
+Activated Zlib <span class="monospaced">deflateTune</span> function. The following is quote from Zlib programming
+manual:
+</p>
+</li>
+</ul></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>ZEXTERN int ZEXPORT deflateTune OF((z_streamp strm,
+                                    int good_length,
+                                    int max_lazy,
+                                    int nice_length,
+                                    int max_chain));
+Fine tune deflate's internal compression parameters. This should only be used by
+someone who understands the algorithm used by Zlib's +deflate+ for searching for the
+best matching string, and even then only by the most fanatic optimizer trying
+to squeeze out the last compressed bit for their specific input data.
+
+Read the deflate.c source code for the meaning of the max_lazy, good_length,
+nice_length, and max_chain parameters.</pre>
+</div></div>
+<div class="paragraph"><p>The described function arguments now affect Intel&#174; IPP data compression functions.</p></div>
+<div class="paragraph"><p>You can find the default sets of string matching parameters in the
+<span class="monospaced">configuration_table</span> array inside <span class="monospaced">deflate.c</span> source code file.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Added the new "trained deflate tables" feature for <span class="monospaced">Z_IPP_FAST_COMPRESSION</span> - fastest
+compression mode (see
+<a href="#_using_of_trained_deflate_tables_in_fastest_compression_mode">New Intel&#174; IPP Functions for Compression with Trained Deflate Tables</a>).
+</p>
+</li>
+</ul></div>
+<h1 id="_how_to_build_zlib_with_intel_174_integrated_performance_primitives_library">How to Build Zlib with Intel&#174; Integrated Performance Primitives Library</h1>
+<div class="paragraph"><p>The data compression domain of the Intel&#174; IPP library contains several functions that can
+speed up the well-known Zlib library (<a href="http://zlib.net">http://zlib.net</a>) in both data compression and decompression
+operations. For the detailed description of these functions, refer to the
+Volume 1: "Signal Processing/Data Compression Functions/Dictionary-Based
+Compression Functions/ZLIB Coding Functions" section of the Intel&#174; IPP Developer Reference.</p></div>
+<div class="paragraph"><p>To use these functions, before building the library you need to replace the
+original source code of several Zlib functions  with Intel&#174; IPP functions calls.</p></div>
+<div class="paragraph"><p>This document provides instructions on how to prepare the Zlib source code and build the library.</p></div>
+<div class="sect1">
+<h2 id="_prerequisites">Prerequisites</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>The Zlib repository contains several stable versions of the library: v.1.2.5.3, v.1.2.6.1, v.1.2.7.3, v.1.2.8 and
+v.1.2.11. You may want to update and speed up a particular Zlib version, which is used in your
+application, or on your operating system. For that, Intel&#174; IPP product provides four source code
+patch files applicable to specific versions of Zlib.</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_downloading_patching_and_build_on_linux_and_macos">Downloading, Patching and Build on Linux* and macOS*</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_downloading_zlib_source_code">Downloading Zlib Source Code</h3>
+<div class="paragraph"><p>Before building the library, you need to download Zlib source code files from
+the Zlib site (<a href="http://zlib.net">http://zlib.net</a>). The following table provides links to specific
+Zlib versions that can be updated with Intel&#174; IPP library function calls.</p></div>
+<table class="tableblock frame-all grid-all"
+style="
+width:80%;
+">
+<col style="width:25%;">
+<col style="width:75%;">
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top" >Zlib version </th>
+<th class="tableblock halign-left valign-top" > Web address</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top" ><p class="tableblock monospaced">1.2.5.3</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock"><a href="http://zlib.net/fossils/zlib-1.2.5.3.tar.gz">http://zlib.net/fossils/zlib-1.2.5.3.tar.gz</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" ><p class="tableblock monospaced">1.2.6.1</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock"><a href="http://zlib.net/fossils/zlib-1.2.6.1.tar.gz">http://zlib.net/fossils/zlib-1.2.6.1.tar.gz</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" ><p class="tableblock monospaced">1.2.7.3</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock"><a href="http://zlib.net/fossils/zlib-1.2.7.3.tar.gz">http://zlib.net/fossils/zlib-1.2.7.3.tar.gz</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" ><p class="tableblock monospaced">1.2.8</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock"><a href="http://zlib.net/fossils/zlib-1.2.8.tar.gz">http://zlib.net/fossils/zlib-1.2.8.tar.gz</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" ><p class="tableblock monospaced">1.2.11</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock"><a href="http://zlib.net/zlib-1.2.11.tar.gz">http://zlib.net/zlib-1.2.11.tar.gz</a></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph"><p>Download the tar file from the specified address to a working directory. Unpack the
+downloaded archive with the following command on Linux*/macOS* systems.</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>$ tar xvf &lt;archive file name&gt;</pre>
+</div></div>
+<div class="paragraph"><p>This command will create the <span class="monospaced">zlib-&lt;version&gt;</span> folder in your
+working directory, where <span class="monospaced">&lt;version&gt;</span> is selected Zlib version number from 1.2.5.3
+to 1.2.11.</p></div>
+</div>
+<div class="sect2">
+<h3 id="_patching_the_source_code">Patching the Source Code</h3>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+Change directory to the <span class="monospaced">zlib-&lt;version&gt;</span> folder.
+</p>
+</li>
+<li>
+<p>
+Apply the corresponding source code patch file <span class="monospaced">zlib-&lt;version&gt;.patch</span> from Intel&#174;
+IPP product distribution with the following command
+</p>
+</li>
+</ol></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>$ patch -p1 &lt; "path to corresponding patch file"</pre>
+</div></div>
+<div class="paragraph"><p>For example, to patch Zlib v.1.2.6.1, go to <span class="monospaced">zlib-1.2.6.1</span> directory and run
+the following command</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>$ patch -p1 &lt; ../zlib-1.2.6.1.patch</pre>
+</div></div>
+<div class="paragraph"><p>If the patching process completed successfully, you will see the following messages:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>patching file adler32.c
+patching file crc32.c
+patching file deflate.c
+patching file inflate.c
+patching file inftrees.h
+patching file trees.c</pre>
+</div></div>
+<div class="paragraph"><p>If something goes wrong, for example, if the <span class="monospaced">adler32.c</span> file has been changed
+(nonoriginal), you will see the diagnostics messages:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>patching file adler32.c
+Hunk #1 FAILED at 5.
+patching file crc32.c
+patching file deflate.c
+patching file inflate.c
+patching file inftrees.h
+patching file trees.c</pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_configuring_and_building_zlib_library">Configuring and Building Zlib Library</h3>
+<div class="paragraph"><p>After Zlib source code files are patched successfully, you need to create a
+makefile for building process. Basically, you need to</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Add the <span class="monospaced">WITH_IPP</span> definition to compiler command line
+</p>
+</li>
+<li>
+<p>
+Add the <span class="monospaced">$IPPROOT/include</span> directory to the list of header files search for compiler
+</p>
+</li>
+<li>
+<p>
+Add Intel&#174; IPP libraries to the list of <span class="monospaced">ld</span> input files.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>On Linux* OS, you can implement the above steps with the standard Zlib
+<span class="monospaced">configure/make</span> sequence and the following commands (32-bit example):</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre># Build dynamic Zlib library with static Intel(R) IPP linkage on Linux*
+$ export CFLAGS="-m32 -DWITH_IPP -I$IPPROOT/include"
+$ export LDFLAGS="$IPPROOT/lib/ia32/libippdc.a $IPPROOT/lib/ia32/libipps.a $IPPROOT/lib/ia32/libippcore.a"
+$ ./configure
+$ make shared</pre>
+</div></div>
+<div class="paragraph"><p>On macOS*, there is no separation between 32- and 64-bit libraries, and you
+don&#8217;t need to specify different set of libraries for different architectures. Use
+the following commands (32-bit example):</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre># Build dynamic Zlib library with static Intel(R) IPP linkage on macOS*
+$ export CFLAGS="-m32 -DWITH_IPP -I$IPPROOT/include"
+$ export LDFLAGS="$IPPROOT/lib/libippdc.a $IPPROOT/lib/libipps.a $IPPROOT/lib/libippcore.a"
+$ ./configure
+$ make shared</pre>
+</div></div>
+<div class="paragraph"><p>Here, the <span class="monospaced">-m32</span> option specifies IA-32 target CPU architecture. For Intel&#174; 64
+architecture the compiler option should be <span class="monospaced">-m64</span>.</p></div>
+<div class="paragraph"><p>The above commands assume that <span class="monospaced">IPPROOT</span> environment variable points to
+head of Intel&#174; IPP location.</p></div>
+<div class="paragraph"><p>The best way is to set up Intel&#174; software tools environment using
+the environment setup file</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>$ source &lt;composer_loc&gt;/bin/compilervars.sh &lt;arch&gt;</pre>
+</div></div>
+<div class="paragraph"><p>where &lt;arch&gt; is <span class="monospaced">ia32</span> (for 32-bit tools), or <span class="monospaced">intel64</span> for 64-bit tools.
+For example, for 64-bit tools from Intel&#174; Parallel Studio XE 2017 package, the command
+line should be</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>$ source /opt/intel/compilers_and_libraries_2017/linux/bin/compilervars.sh intel64</pre>
+</div></div>
+<div class="paragraph"><p>The <span class="monospaced">IPPROOT</span> environment variable can be set manually, as</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>$ export IPPROOT=&lt;composer_loc&gt;/ipp</pre>
+</div></div>
+<div class="paragraph"><p>where <span class="monospaced">&lt;composer_loc&gt;</span> is location of Intel&#174; C++ Composer XE or Intel&#174; Parallel
+Studio XE suite.</p></div>
+	<p>
+		<div class="Note">
+			<h3 class="NoteTipHead">Note</h3>
+			<p>The conditional compilation statements, used for Zlib source code files modification,
+allow to build original version of Zlib from the same source code files. For that,
+you need to build Zlib library without modification of <span class="monospaced">CFLAGS</span> and <span class="monospaced">LDFLAGS</span>.
+If <span class="monospaced">WITH_IPP</span> definition doesn&#8217;t exist in compiler options, Zlib source code files
+are compiled as unpatched.
+				</p>
+		</div>
+		</p>
+	</div>
+<div class="sect2">
+<h3 id="_static_and_dynamic_linking_to_intel_174_ipp_libraries">Static and Dynamic Linking to Intel&#174; IPP Libraries</h3>
+<div class="paragraph"><p>When building the <span class="monospaced">libz</span> dynamic shared object, you can use  either static or
+dynamic linking to Intel&#174; IPP libraries. Different linking modes have their
+advantages and disadvantages. For example, static linking to Intel&#174; IPP
+provides target object (<span class="monospaced">libz.so</span>, or <span class="monospaced">libz.dylib</span> in our case) independence
+from environment, easy transfer from one computer to another. On the other hand,
+statically linked object has bigger size and can&#8217;t benefit from newer (updated)
+version of Intel&#174; IPP without re-linking.</p></div>
+<div class="paragraph"><p>The <span class="monospaced">libz</span> dynamic libraries, linked statically with Intel&#174; IPP, are
+self-sufficient. It means that when you build an application using these
+libraries, you don&#8217;t need to add Intel&#174; IPP libraries to the linker command
+line (unless your application uses Intel&#174; IPP apart from <span class="monospaced">libz</span>).
+All references to Intel&#174; IPP functions are already resolved, and required
+Intel&#174; IPP functions code is inside the <span class="monospaced">libz</span> dynamic library.</p></div>
+<div class="sect3">
+<h4 id="_build_zlib_with_static_linking_to_intel_174_ipp">Build Zlib with Static Linking to Intel&#174; IPP</h4>
+<div class="paragraph"><p>On Linux* OS, when the below linker flags are specified by the <span class="monospaced">LDFLAGS</span>
+environment variable, Zlib is linked to Intel&#174; IPP libraries (.a files)
+statically:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>$ export LDFLAGS="$IPPROOT/lib/intel64/libippdc.a $IPPROOT/lib/intel64/libipps.a \
+                  $IPPROOT/lib/intel64/libippcore.a"</pre>
+</div></div>
+<div class="paragraph"><p>You can  check the independence of the resulting dynamic library <span class="monospaced">libz.so</span>
+from Intel&#174; IPP libraries with the "ldd" tool.</p></div>
+<div class="paragraph"><p>For example,</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>$ ldd libz.so
+        linux-vdso.so.1 =&gt;  (0x00007fff885fe000)
+        libc.so.6 =&gt; /lib64/libc.so.6 (0x00007fb169e38000)
+        /lib64/ld-linux-x86-64.so.2 (0x00007fb16a503000)</pre>
+</div></div>
+<div class="paragraph"><p>You can see that the <span class="monospaced">libz.so</span> dynamic library depends on system dynamic
+libraries only. The size of the resulting <span class="monospaced">libz</span> library in this case will be more
+than 700 KBytes because it contains optimizations for all CPUs supported by
+Intel&#174; IPP.</p></div>
+<div class="paragraph"><p>On macOS*, the similar tool is called "otool". For example,</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>$ otool -L libz.dylib
+libz.dylib:
+        /usr/local/lib/libz.1.dylib (compatibility version 1.0.0, current version 1.2.5)
+        /usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1213.0.0)</pre>
+</div></div>
+<div class="paragraph"><p>You can use the following command to build an application with such kind of library:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>$ cc -o zlib_test -Izlib/include zlib_test.c -L. -lz</pre>
+</div></div>
+<div class="paragraph"><p>Here, <span class="monospaced">zlib/include</span> is a directory where zlib header files reside
+(in most cases <span class="monospaced">zlib.h</span> and <span class="monospaced">zconf.h</span> are required), "-L." means that Linux*
+linker will be searching next libraries in the current directory, "-lz" means
+that the linker will look for the <span class="monospaced">libz.so</span> file (shared linking is default
+method on most Linux* systems).</p></div>
+<div class="paragraph"><p>To run built application on Linux* system, you need to modify the
+<span class="monospaced">LD_LIBRARY_PATH</span> environment variable, which describes the search path for
+dynamic libraries:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>$ export LD_LIBRARY_PATH=.:$LD_LIBRARY_PATH
+$ ./zlib_test</pre>
+</div></div>
+<div class="paragraph"><p>On macOS* systems the corresponding environment variable is <span class="monospaced">DYLD_LIBRARY_PATH</span>:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>$ export DYLD_LIBRARY_PATH=.:$DYLD_LIBRARY_PATH
+$ ./zlib_test</pre>
+</div></div>
+</div>
+<div class="sect3">
+<h4 id="_building_zlib_with_dynamic_linking_to_intel_174_ipp">Building Zlib with Dynamic Linking to Intel&#174; IPP</h4>
+<div class="paragraph"><p>Sometimes, you may want to build <span class="monospaced">libz</span> dynamic library linked dynamically to
+Intel&#174; IPP libraries. This is, for example, if you know that <span class="monospaced">libz</span> will be
+used on a computer with pre-installed and properly set dynamic Intel&#174; IPP
+libraries. Or, you may want to minimize file size of <span class="monospaced">libz</span> dynamic library,
+or, to decrease the total amount of RAM size required for several application(s)
+that use <span class="monospaced">libz</span>.</p></div>
+<div class="paragraph"><p>In this case, the following set of commands will build the <span class="monospaced">libz.so</span> library with
+dynamic linking to the Intel&#174; IPP libraries (64-bit example).</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>$ source /opt/intel/compilers_and_libraries_2016/linux/bin/compilervars.sh intel64
+$ export CFLAGS="-m64 -DWITH_IPP -I$IPPROOT/include"
+$ export LDFLAGS="-L$IPPROOT/lib/intel64 -lippdc -lipps -lippcore"
+$ ./configure
+$ make shared</pre>
+</div></div>
+<div class="paragraph"><p>To check how <span class="monospaced">libz.so</span> is built:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>$ ldd libz.so
+        linux-vdso.so.1 =&gt;  (0x00007fff347fe000)
+        libc.so.6 =&gt; /lib64/libc.so.6 (0x00007f9210e35000)
+        libippdc.so.9.0 =&gt; /opt/intel/compilers_and_libraries_2016.1.125/linux/ipp/lib/intel64/libippdc.so.9.0 (0x00007f9210c2f000)
+        libipps.so.9.0 =&gt; /opt/intel/compilers_and_libraries_2016.1.125/linux/ipp/lib/intel64/libipps.so.9.0 (0x00007f92109ed000)
+        libippcore.so.9.0 =&gt; /opt/intel/compilers_and_libraries_2016.1.125/linux/ipp/lib/intel64/libippcore.so.9.0 (0x00007f92107e1000)
+        /lib64/ld-linux-x86-64.so.2 (0x00007f921143d000)
+        libdl.so.2 =&gt; /lib64/libdl.so.2 (0x00007f92105dc000)
+        libm.so.6 =&gt; /lib64/libm.so.6 (0x00007f92102da000)</pre>
+</div></div>
+<div class="paragraph"><p>On your computer, the actual library name and address can be different, e.g.
+instead of <span class="monospaced">&#8230;/compilers_and_libraries_2016.1.125&#8230;</span> you may have different
+package number and location. The above "ldd" output shows that the <span class="monospaced">libz.so</span>
+shared object is built dynamically with Intel&#174; IPP <span class="monospaced">libippdc.so</span>, <span class="monospaced">libipps.so</span>
+and <span class="monospaced">libippcore.so</span> dynamic libraries.</p></div>
+<div class="paragraph"><p>On macOS* system, the corresponding set of command will be:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>$ source /opt/intel/compilers_and_libraries_2016/mac/bin/compilervars.sh intel64
+$ export CFLAGS="-m64 -DWITH_IPP -I$IPPROOT/include"
+$ export LDFLAGS="-L$IPPROOT/lib -lippdc -lipps -lippcore"
+$ ./configure
+$ make shared
+$ otool -L libz.dylib</pre>
+</div></div>
+<div class="paragraph"><p>On a target computer, before the <span class="monospaced">libz</span> library is used, you need to properly
+set paths to Intel&#174; IPP dynamic libraries. On Linux* OS,  do this by
+modifying the <span class="monospaced">LD_LIBRARY_PATH</span> environment variable. On macOS*, modify
+<span class="monospaced">DYLD_LIBRARY_PATH</span>. If you use <span class="monospaced">compilervars</span> script to set working environment,
+these environment variables are set automatically.</p></div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_using_static_span_class_monospaced_libz_a_span_library_to_build_user_applications">Using Static <span class="monospaced">libz.a</span> Library to Build User Applications</h3>
+<div class="paragraph"><p>During standard "configure/make" process the makefile creates the <span class="monospaced">libz.a</span>
+static library with <span class="monospaced">libz</span> compiled functions. You may want to use this static
+library with your application instead of using the <span class="monospaced">libz</span> shared object.</p></div>
+<div class="paragraph"><p>The static <span class="monospaced">libz.a</span> library contains unresolved external references to
+Intel&#174; IPP library functions, so, when you build your application with the
+static <span class="monospaced">libz.a</span> library, you still need to solve the problem of linking to
+Intel&#174; IPP libraries.</p></div>
+<div class="paragraph"><p>For static linking to Intel&#174; IPP, use the following linking options:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>libz.a $IPPROOT/lib/&lt;arch&gt;/libippdc.a $IPPROOT/lib/&lt;arch&gt;/libipps.a $IPPROOT/lib/&lt;arch&gt;/libippcore.a</pre>
+</div></div>
+<div class="paragraph"><p>where &lt;arch&gt; is either <span class="monospaced">ia32</span> or <span class="monospaced">intel64</span> depending on kind of application
+(32-bit or 64-bit) you are going to build.</p></div>
+<div class="paragraph"><p>On macOS* the corresponding linking options are</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>libz.a $IPPROOT/lib/libippdc.a $IPPROOT/lib/libipps.a $IPPROOT/lib/libippcore.a</pre>
+</div></div>
+<div class="paragraph"><p>For dynamic linking to Intel&#174; IPP on Linux* OS, use the following options:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>libz.a -L$IPPROOT/lib/&lt;arch&gt; -lippdc -lipps -lippcore</pre>
+</div></div>
+<div class="paragraph"><p>On macOS*</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>libz.a -L$IPPROOT/lib -lippdc -lipps -lippcore</pre>
+</div></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_downloading_patching_and_build_on_windows">Downloading, Patching, and Build on Windows*</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>To download Zlib source code files for Windows*, you can use the same URL
+addresses as for Linux*. However, the patching and building processes on
+Windows* are different.</p></div>
+<div class="sect2">
+<h3 id="_unpacking_zlib_tarball">Unpacking Zlib Tarball</h3>
+<div class="paragraph"><p>To get the Zlib source code files on Windows* computer, you need to:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Download the <span class="monospaced">.tar.gz</span> file from <a href="http://zlib.net">http://zlib.net</a>
+</p>
+</li>
+<li>
+<p>
+Unpack the archive using any of available tar tools for Windows*. For example
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+Pre-built <span class="monospaced">tar</span> from Free Software Foundation (<a href="http://gnuwin32.sourceforge.net/packages/gtar.htm">http://gnuwin32.sourceforge.net/packages/gtar.htm</a>)
+</p>
+</li>
+<li>
+<p>
+<span class="monospaced">7-zip</span> from <a href="http://www.7-zip.org/">http://www.7-zip.org/</a>.
+</p>
+</li>
+</ul></div>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="_patching_original_zlib_files">Patching Original Zlib Files</h3>
+<div class="paragraph"><p>There are no standard system tools for patching on Windows*, so you need to use
+3-rd party tools. For example,
+<a href="http://gnuwin32.sourceforge.net/packages/patch.htm">http://gnuwin32.sourceforge.net/packages/patch.htm</a> from Free Software Foundation.</p></div>
+<div class="paragraph"><p>With this tool you need to use the following command line options:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>&gt; patch.exe -p1 --binary &lt; &lt;patch file location&gt;</pre>
+</div></div>
+<div class="paragraph"><p>"--binary" command line option here is important to avoid confusion because of
+Linux*/Windows* "end-of-line" character difference.</p></div>
+<div class="paragraph"><p>Example for zlib-1.2.7.3 is below:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>&gt; tar.exe xvf zlib-1.2.7.3.tar.gz
+&gt; cd zlib-1.2.7.3
+&gt; patch.exe -p1 --binary &lt; ..\zlib-1.2.7.3.patch
+patching file adler32.c
+patching file crc32.c
+patching file deflate.c
+patching file inflate.c
+patching file inftrees.h
+patching file trees.c</pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_building_zlib_with_intel_174_ipp_on_windows">Building Zlib With Intel&#174; IPP on Windows*</h3>
+<div class="paragraph"><p>To build Zlib on Windows*, use the "nmake" file <span class="monospaced">Makefile.msc</span> from the <span class="monospaced">zlib\win32</span>
+directory. To do that, start Microsoft* Visual Studio* command-line window that
+corresponds to a target application architecture (IA-32 or Intel&#174; 64) and
+execute the following command from the root of Zlib source code tree
+(below are 32-bit examples).</p></div>
+<div class="paragraph"><p>Static linking:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>&gt; nmake -f win32\Makefile.msc LOC="-DWITH_IPP -I\"%IPPROOT%\include\"" ^
+       LDFLAGS="-nologo -incremental:no ^
+       -opt:ref /LIBPATH:\"%IPPROOT%\lib\ia32_win\" ^
+       ippdcmt.lib ippsmt.lib ippcoremt.lib"</pre>
+</div></div>
+<div class="paragraph"><p>Dynamic linking:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>&gt; nmake -f win32\Makefile.msc LOC="-DWITH_IPP -I\"%IPPROOT%\include\"" ^
+        LDFLAGS="-nologo -incremental:no ^
+        -opt:ref /LIBPATH:\"%IPPROOT%\lib\ia32_win\" ^
+        ippdc.lib ipps.lib ippcore.lib"</pre>
+</div></div>
+<div class="paragraph"><p>In the first case the "nmake" creates the <span class="monospaced">zlib1.dll</span> file not depending on
+dynamic Intel&#174; IPP libraries. In the second, <span class="monospaced">zlib1.dll</span> depends on
+<span class="monospaced">ippdc-x.y.dll</span>, <span class="monospaced">ipps-x.y.dll</span> and <span class="monospaced">ippcore-x.y.dll</span>, where "x.y" are major and
+minor version numbers of the corresponding Intel&#174; IPP library.</p></div>
+</div>
+<div class="sect2">
+<h3 id="_building_user_application_with_the_static_span_class_monospaced_zlib_lib_span_library">Building User Application with the Static <span class="monospaced">zlib.lib</span> library</h3>
+<div class="paragraph"><p>When static linking is used, the Zlib build procedure, along with <span class="monospaced">zlib1.dll</span>,
+creates the static Zlib library <span class="monospaced">zlib.lib</span>. It can be used with application
+object files to be built statically.</p></div>
+<div class="paragraph"><p>If you want the Intel&#174; IPP library to be linked to your application statically,
+you need to specify the following input files in the command line to Microsoft* linker:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>"%IPPROOT%\lib\&lt;arch&gt;\ippdcmt.lib"  "%IPPROOT%\lib\&lt;arch&gt;\ippsmt.lib"  "%IPPROOT%\lib\&lt;arch&gt;\ippcoremt.lib"</pre>
+</div></div>
+<div class="paragraph"><p>For dynamic linking, you need to choose other libraries from the Intel&#174; IPP library directory:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>"%IPPROOT%\lib\&lt;arch&gt;\ippdc.lib"  "%IPPROOT%\lib\&lt;arch&gt;\ipps.lib"  "%IPPROOT%\lib\&lt;arch&gt;\ippcore.lib"</pre>
+</div></div>
+<div class="paragraph"><p>These libraries are just references to Intel&#174; IPP dynamic libraries (DLLs).</p></div>
+	<p>
+		<div class="Note">
+			<h3 class="NoteTipHead">Note</h3>
+			<p>For Windows* build procedure it is important to use double quotes """ around
+<span class="monospaced">%IPPROOT%</span>, because by default Intel&#174; IPP is installed to the
+"<span class="monospaced">Program Files(x86)</span>" directory. Its name contains spaces and, without quotes
+around, this name can confuse Microsoft* compiler and/or linker.
+				</p>
+		</div>
+		</p>
+
+	</div>
+</div>
+</div>
+<h1 id="_how_to_verify_zlib_with_intel_174_integrated_performance_primitives_library">How to Verify Zlib with Intel&#174; Integrated Performance Primitives Library</h1>
+<div class="paragraph"><p>For smoke testing or verification of the newly built library, you can use
+small tests/examples, which are supplied with the Zlib distribution.</p></div>
+<div class="sect1">
+<h2 id="_verification_on_linux_and_macos">Verification on Linux* and macOS*</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>The makefile generated by the <span class="monospaced">configure</span> utility can be used to test library
+build with Makefile&#8217;s <span class="monospaced">test</span> target:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>$ make test</pre>
+</div></div>
+<div class="sect2">
+<h3 id="_dynamic_span_class_monospaced_libz_span_library_and_dynamic_tests">Dynamic <span class="monospaced">libz</span> Library and Dynamic Tests</h3>
+<div class="paragraph"><p>In general, command lines to build and test are (64-bit Linux* example on zlib 1.2.11):</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>$ export CFLAGS="-m64 -DWITH_IPP -I$IPPROOT/include"
+$ export LDFLAGS="$IPPROOT/lib/intel64/libippdc.a \
+        $IPPROOT/lib/intel64/libipps.a $IPPROOT/lib/intel64/libippcore.a"
+$ ./configure
+$ make testshared
+hello world
+zlib version 1.2.11 = 0x12b0, compile flags = 0xa9
+uncompress(): hello, hello!
+gzread(): hello, hello!
+gzgets() after gzseek:  hello!
+inflate(): hello, hello!
+large_inflate(): OK
+after inflateSync(): hello, hello!
+inflate with dictionary: hello, hello!
+                *** zlib shared test OK ***</pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_static_span_class_monospaced_libz_span_library_and_static_tests">Static <span class="monospaced">libz</span> Library and Static Tests</h3>
+<div class="paragraph"><p>For static tests you need to use slightly different approach, because in
+original Zlib makefile <span class="monospaced">LDFLAGS</span> variable is not used for static build.
+<span class="monospaced">TEST_LDFLAGS</span> argument in "make" command line must be used instead.</p></div>
+<div class="paragraph"><p>So, the command lines should be (32-bit Linux* example)</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>$ export CFLAGS="-m32 -DWITH_IPP -I$IPPROOT/include"
+$ ./configure
+$ make teststatic TEST_LDFLAGS="libz.a $IPPROOT/lib/ia32/libippdc.a \
+                     $IPPROOT/lib/ia32/libipps.a $IPPROOT/lib/ia32/libippcore.a"
+hello world
+zlib version 1.2.11 = 0x12b0, compile flags = 0x55
+uncompress(): hello, hello!
+gzread(): hello, hello!
+gzgets() after gzseek:  hello!
+inflate(): hello, hello!
+large_inflate(): OK
+after inflateSync(): hello, hello!
+inflate with dictionary: hello, hello!
+                *** zlib test OK ***</pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_test_span_class_monospaced_libz_span_on_macos">Test <span class="monospaced">libz</span> on macOS*</h3>
+<div class="paragraph"><p>Below are the same example command lines for macOS*</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>$ export CFLAGS="-m64 -DWITH_IPP -I$IPPROOT/include"
+$ export LDFLAGS="$IPPROOT/lib/libippdc.a $IPPROOT/lib/libipps.a \
+                  $IPPROOT/lib/libippcore.a"
+$ ./configure
+$ make testshared
+hello world
+zlib version 1.2.8 = 0x1280, compile flags = 0xa9
+uncompress(): hello, hello!
+gzread(): hello, hello!
+gzgets() after gzseek:  hello!
+inflate(): hello, hello!
+large_inflate(): OK
+after inflateSync(): hello, hello!
+inflate with dictionary: hello, hello!
+                *** zlib shared test OK ***</pre>
+</div></div>
+<div class="paragraph"><p>and</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>$ export CFLAGS="-m32 -DWITH_IPP -I$IPPROOT/include"
+$ ./configure
+$ make teststatic TEST_LDFLAGS="libz.a $IPPROOT/lib/libippdc.a \
+                     $IPPROOT/lib/libipps.a $IPPROOT/lib/libippcore.a"
+hello world
+zlib version 1.2.8 = 0x1280, compile flags = 0x95
+uncompress(): hello, hello!
+gzread(): hello, hello!
+gzgets() after gzseek:  hello!
+inflate(): hello, hello!
+large_inflate(): OK
+after inflateSync(): hello, hello!
+inflate with dictionary: hello, hello!
+                *** zlib test OK ***</pre>
+</div></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_verification_on_windows">Verification on Windows*</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Command line to build and test dynamic Zlib library on Windows* is</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>nmake -f win32\Makefile.msc LOC="-DWITH_IPP -I\"%IPPROOT%\include\"" ^
+    LDFLAGS="-nologo -incremental :no -opt:ref ^
+    /LIBPATH:\"%IPPROOT%\lib\ia32_win\" ^
+    ippdcmt.lib ippsmt.lib ippcoremt.lib" testdll
+
+Microsoft (R) Program Maintenance Utility Version 14.00.23506.0
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+        example_d
+zlib version 1.2.5.3 = 0x1253, compile flags = 0x55
+uncompress(): hello, hello!
+gzread(): hello, hello!
+gzgets() after gzseek:  hello!
+inflate(): hello, hello!
+large_inflate(): OK
+after inflateSync(): hello, hello!
+inflate with dictionary: hello, hello!
+        echo hello world | minigzip_d | minigzip_d -d
+hello world</pre>
+</div></div>
+</div>
+</div>
+<h1 id="_using_of_trained_deflate_tables_in_fastest_compression_mode">Using of Trained Deflate Tables in Fastest Compression Mode</h1>
+<div class="paragraph"><p>In Intel&#174; IPP version of Zlib, the fastest compression mode is performed using
+the simplified pattern of the search algorithm and special table for Huffman compression.
+By default, the static Huffman compression table is used.
+This table provides an average compression ratio suitable for all kinds of <span class="monospaced">deflate</span> input data.</p></div>
+<div class="paragraph"><p>If <span class="monospaced">deflate</span> is used to compress more or less uniform input data, for example texts,
+HTML files, or XML tables, you can significantly improve the compression ratio
+without losses to compression performance by using specific compression tables,
+which contain pre-built statistical data on such kind of information.</p></div>
+<div class="paragraph"><p>To generate and use trained deflate tables, the following functionality is added
+to the original Zlib distribution:</p></div>
+<div class="listingblock">
+<div class="content"></div></div>
+<div class="sect1">
+<h2 id="_new_intel_174_ipp_functions_for_compression_with_trained_deflate_tables">New Intel&#174; IPP Functions for Compression with Trained Deflate Tables</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>The new functionality is implemented in the scope of original <span class="monospaced">z_stream</span> objects.
+To use functions for statistics collection, table generation and table use, you need
+to have initialized <span class="monospaced">z_stream</span> objects.</p></div>
+<div class="paragraph"><p>Function names start with "zz" prefix and the functions are placed at the
+end of dynamic libraries (dynamic object .so on Linux* and DLL on Windows*).
+This prevents from breaking ordinal numbers of functions in dynamic library, though
+this usage model - ordinal numbers instead of function names - is not recommended by
+Zlib documentation. In <span class="monospaced">zlib.h</span> file the new function names are also redefined to make
+them more useful.</p></div>
+<div class="sect2">
+<h3 id="_span_class_monospaced_deflatecreatestat_span_function"><span class="monospaced">deflateCreateStat</span> Function</h3>
+<div class="paragraph"><p><em>Syntax</em>:</p></div>
+<div class="listingblock">
+<div class="content"></div></div>
+<div class="paragraph"><p>This function starts collecting of input data statistics for all subsequent calls
+to <span class="monospaced">deflate</span> function on the same stream. The <span class="monospaced">deflateCreateStat</span> function must be
+used with address of initialized stream as argument. The typical use is</p></div>
+<div class="listingblock">
+<div class="content"></div></div>
+<div class="paragraph"><p>After initialization all calls to <span class="monospaced">deflate</span> function, besides performing
+compression itself, accumulate input data entropy statistics.</p></div>
+<div class="paragraph"><p>The return values are:</p></div>
+<table class="tableblock frame-all grid-cols"
+style="
+width:100%;
+">
+<col style="width:50%;">
+<col style="width:50%;">
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top" >Value              </th>
+<th class="tableblock halign-left valign-top" > Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top" ><p class="tableblock"><span class="monospaced">Z_OK</span></p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">Success</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" ><p class="tableblock"><span class="monospaced">Z_STREAM_ERROR</span></p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">Argument is <span class="monospaced">NULL</span>, or stream is not initialized, or compression level is not <span class="monospaced">Z_IPP_FAST_COMPRESSION</span></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" ><p class="tableblock"><span class="monospaced">Z_MEM_ERROR</span></p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">Function is not able to allocate internal arrays</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_span_class_monospaced_deflategettablen_span_functon"><span class="monospaced">deflateGetTabLen</span> Functon</h3>
+<div class="paragraph"><p><em>Syntax</em>:</p></div>
+<div class="listingblock">
+<div class="content"></div></div>
+<div class="paragraph"><p>This function stops accumulating of input data statistics, calculates the size
+of trained table, generates the table and returns its length to calling application.
+The table is stored internally <span class="monospaced">z_stream</span> until <span class="monospaced">deflateGetTab</span> function is called.</p></div>
+<div class="paragraph"><p>The function accepts pointer to <span class="monospaced">z_stream</span> with accumulated statistics as its argument.</p></div>
+<div class="paragraph"><p>Return value is length of generated table. Application must allocate dynamic memory
+buffer of that length (usually, length is about 1K bytes) and, then must call
+<span class="monospaced">deflateGetTab</span> function to copy generated table from <span class="monospaced">z_stream</span> to external buffer
+for subsequent use.</p></div>
+<div class="paragraph"><p>Return values are:</p></div>
+<table class="tableblock frame-all grid-cols"
+style="
+width:100%;
+">
+<col style="width:50%;">
+<col style="width:50%;">
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top" >Value              </th>
+<th class="tableblock halign-left valign-top" > Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">&gt; 0</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">Size of generated table</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" ><p class="tableblock"><span class="monospaced">Z_STREAM_ERROR</span></p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">Argument is <span class="monospaced">NULL</span>, or stream is not initialized, or stream with no statistics specified</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">Internal Intel&#174; IPP function failed</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_span_class_monospaced_deflategettab_span_function"><span class="monospaced">deflateGetTab</span> Function</h3>
+<div class="paragraph"><p><em>Syntax</em>:</p></div>
+<div class="listingblock">
+<div class="content"></div></div>
+<div class="paragraph"><p>This function copies generated deflate table from <span class="monospaced">z_stream</span> internal buffer to
+buffer allocated in application memory for external use. The arguments are: <span class="monospaced">s_streamp</span>
+pointer to <span class="monospaced">z_stream</span> with generated table, <span class="monospaced">voidpf</span> is a <span class="monospaced">void*</span> pointer to external buffer.</p></div>
+<div class="paragraph"><p>The typical use of <span class="monospaced">deflateGetTabLen</span> and <span class="monospaced">deflateGetTab</span> function is:</p></div>
+<div class="listingblock">
+<div class="content"></div></div>
+<div class="paragraph"><p>The return values are:</p></div>
+<table class="tableblock frame-all grid-cols"
+style="
+width:100%;
+">
+<col style="width:50%;">
+<col style="width:50%;">
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top" >Value              </th>
+<th class="tableblock halign-left valign-top" > Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top" ><p class="tableblock"><span class="monospaced">Z_OK</span></p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">Success</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" ><p class="tableblock"><span class="monospaced">Z_STREAM_ERROR</span></p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">Argument is <span class="monospaced">NULL</span>, or stream is not initialized,
+                        or stream with no statistics specified,
+                        or table is not generated for stream</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_span_class_monospaced_deflateusetab_span_function"><span class="monospaced">deflateUseTab</span> Function</h3>
+<div class="paragraph"><p><em>Syntax</em>:</p></div>
+<div class="listingblock">
+<div class="content"></div></div>
+<div class="paragraph"><p>This function copies buffer with trained table to <span class="monospaced">z_stream</span> internal memory.
+During the next <span class="monospaced">deflate</span> function calls for that stream, this trained table
+will be used to increase ratio of the compression operations.</p></div>
+<div class="paragraph"><p>Return values are:</p></div>
+<table class="tableblock frame-all grid-cols"
+style="
+width:100%;
+">
+<col style="width:50%;">
+<col style="width:50%;">
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top" >Value                  </th>
+<th class="tableblock halign-left valign-top" > Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top" ><p class="tableblock"><span class="monospaced">Z_OK</span></p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">Success</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" ><p class="tableblock"><span class="monospaced">Z_STREAM_ERROR</span></p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">Argument is <span class="monospaced">NULL</span>, or stream is not initialized,
+                        or table pointer is <span class="monospaced">NULL</span>,
+                        or table length is zero</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph"><p>The operations with <span class="monospaced">z_stream</span>, associated with trained table, are as usual.</p></div>
+
+	<p><div class="Note">
+		   <h3 class="NoteTipHead">Note</h3>
+		   <p>
+			   Currently, <span class="monospaced">z_stream</span> object is not designed to change trained deflate tables
+"on-the-run", so to apply another trained table to compress other kind of input data, you need
+to close stream with previous table and open a new stream for another trained table.</p>
+		</div>
+		</p>
+
+
+	</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_compression_ratio_results_of_intel_174_ipp_zlib_with_trained_deflate_tables">Compression Ratio Results of Intel&#174; IPP Zlib with Trained Deflate Tables</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>The table below shows the compression ratio and performance of deflating of files
+from Calgary* data compression corpus without- and with trained compression
+table(s).</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+CPU: Intel&#174; Core&#8482; i5-4300U @ 2.5 GHz on Windows* 8.1 Enterprise, 64 bits
+</p>
+</li>
+<li>
+<p>
+Compression ratio is calculated as &lt;file size before compression&gt; / &lt;file size after compression&gt;
+</p>
+</li>
+<li>
+<p>
+Compression performance is &lt;file size before compression&gt; / &lt;compression time&gt; in megabytes per second
+</p>
+</li>
+<li>
+<p>
+Compression level is -2 (<span class="monospaced">Z_IPP_FAST_COMPRESSION</span>).
+</p>
+</li>
+</ul></div>
+<table class="tableblock frame-all grid-cols"
+style="
+width:50%;
+">
+<col style="width:20%;">
+<col style="width:20%;">
+<col style="width:20%;">
+<col style="width:20%;">
+<col style="width:20%;">
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top" >File   </th>
+<th class="tableblock halign-left valign-top" > Default Ratio</th>
+<th class="tableblock halign-left valign-top" > Default Compression Performance </th>
+<th class="tableblock halign-left valign-top" > Ratio with Table </th>
+<th class="tableblock halign-left valign-top" > Performance with Table</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">bib</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">2.15</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">176</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">2.60</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">179</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">book1</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">1.71</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">126</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">2.19</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">158</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">book2</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">2.06</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">177</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">2.54</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">186</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">geo</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">1.10</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">93</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">1.46</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">96</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">news</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">1.97</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">130</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">2.37</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">148</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">obj1</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">1.77</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">206</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">1.97</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">222</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">obj2</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">2.31</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">178</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">2.59</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">177</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">paper1</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">2.06</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">179</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">2.50</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">186</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">paper2</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">1.93</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">157</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">2.42</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">172</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">paper3</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">1.84</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">159</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">2.30</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">186</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">paper4</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">1.77</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">177</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">2.23</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">240</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">paper5</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">1.81</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">176</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">2.23</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">246</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">paper6</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">2.08</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">200</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">2.52</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">214</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">pic</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">6.76</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">534</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">8.28</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">519</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">progc</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">2.19</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">203</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">2.62</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">211</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">progl</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">3.03</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">245</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">3.63</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">252</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">progp</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">3.13</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">273</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">3.68</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">288</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">trans</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">3.45</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">307</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">3.98</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">309</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph"><p>The data above shows the best result when a separate table is generated for each
+Calgary* file and this table is used for compression. If you generate a trained
+table for a set of files, the resulting compression ratio will be less by some points.
+The compression performance will likely be the same.</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_how_to_create_and_use_trained_deflate_tables">How to Create and Use Trained Deflate Tables</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Before you start using a trained deflate table, you need to build it. The build process
+includes two phases:</p></div>
+<div class="paragraph"><p>1) Accumulation of statistics on input data</p></div>
+<div class="paragraph"><p>2) Generation of the trained table.</p></div>
+<div class="paragraph"><p>Accumulation of statistics can be done in parallel with ordinary compression.</p></div>
+<div class="paragraph"><p>For example,</p></div>
+<div class="listingblock">
+<div class="content"></div></div>
+<div class="paragraph"><p>The definition of <span class="monospaced">WITH_IPP</span> and <span class="monospaced">WITH_IPP_TABLES</span> is important in the example above,
+because patched <span class="monospaced">zlib.h</span> file contains some extensions in conditional compilation
+constructions.</p></div>
+<div class="paragraph"><p>You can train deflate tables for different kind of data - text, binary, HTMLs -
+and re-use them on appropriate data.</p></div>
+	<p>
+		<div class="Note">
+			<h3 class="NoteTipHead">Important</h3>
+			<p>Trained deflate table is an experimental mode in Intel&#174; IPP Zlib, so use this
+feature with some caution.
+				</p>
+		</div>
+		</p>
+
+	<p>
+		<div class="Note">
+			<h3 class="NoteTipHead">Important</h3>
+			<p>Don&#8217;t pass much data through statistics accumulation. There 
+is no automatic checking of data statistics, so if too much data is compressed 
+in the "statistics accumulation" mode, the statistic array overflow may happen. 
+In most cases about 1 MB of input data is enough for good trained table 
+generation.
+				</p>
+		</div>
+		</p>
+
+			
+	
+<div class="listingblock">
+<div class="content"></div></div>
+
+	<p>
+		<div class="Note">
+			<h3 class="NoteTipHead">Note</h3>
+			<p>Don&#8217;t use trained deflate table for inappropriate input data</div>Data compression is a data-driven process, so, in some cases, mixing of trained
+table for some kind of data with compression of different kind of data may
+decrease the compression ratio, in some cases the ratio could be even less than 1.</p>
+		</div>
+		</p>
+	
+    <div class="listingblock">
+<div class="content"></div></div>
+<div class="paragraph"><p>For example, below is table with compression ratio of Calgary* files, compressed
+with table trained on all Calgary* files (Calgary*-generated table).</p></div>
+<table class="tableblock frame-all grid-cols"
+style="
+width:50%;
+">
+<col style="width:25%;">
+<col style="width:25%;">
+<col style="width:25%;">
+<col style="width:25%;">
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top" >File   </th>
+<th class="tableblock halign-left valign-top" > Default Ratio</th>
+<th class="tableblock halign-left valign-top" > Ratio with File-generated Table </th>
+<th class="tableblock halign-left valign-top" > Ratio with Calgary*-generated table</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">bib</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">2.15</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">2.60</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">2.52</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">book1</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">1.71</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">2.19</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">2.13</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">book2</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">2.06</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">2.54</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">2.48</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">geo</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">1.10</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">1.46</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">1.16</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">news</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">1.97</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">2.37</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">2.31</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">obj1</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">1.77</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">1.97</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">1.67</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">obj2</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">2.31</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">2.59</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">2.43</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">paper1</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">2.06</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">2.50</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">2.43</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">paper2</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">1.93</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">2.42</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">2.36</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">paper3</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">1.84</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">2.30</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">2.24</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">paper4</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">1.77</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">2.23</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">2.10</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">paper5</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">1.81</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">2.23</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">2.10</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">paper6</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">2.08</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">2.52</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">2.44</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">pic</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">6.76</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">8.28</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">6.75</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">progc</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">2.19</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">2.62</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">2.52</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">progl</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">3.03</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">3.63</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">3.50</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">progp</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">3.13</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">3.68</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">3.49</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">trans</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">3.45</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">3.98</p></td>
+<td class="tableblock halign-left valign-top" ><p class="tableblock">3.81</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph"><p>You see that, for example, for the <span class="monospaced">pic</span> file the compression ratio  with Calgary*
+generated table is worse than if no tables are used at all.</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_how_to_build_zlib_with_intel_174_integrated_performance_primitives_library_for_trained_deflate_tables">How to Build Zlib with Intel&#174; Integrated Performance Primitives Library for Trained Deflate Tables</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>In order to build Zlib library with Intel&#174; IPP functionality for trained deflate table
+you may use the procedure described in corresponding
+<a href="#_how_to_build_zlib_with_intel_174_integrated_performance_primitives_library">How to Build Zlib with Intel&#174; Integrated Performance Primitives Library</a>
+chapter.
+The only difference is, that you need to specify additional definition
+<span class="monospaced">-DWITH_IPP_TABLES</span> together with definition <span class="monospaced">-DWITH_IPP</span>.</p></div>
+<div class="paragraph"><p>So, correct compiler options for Linux* must be</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>$ export CFLAGS="-DWITH_IPP -DWITH_IPP_TABLES -I$IPPROOT/include"</pre>
+</div></div>
+<div class="paragraph"><p>On Windows* you need only to add a new definition of <span class="monospaced">WITH_IPP_TABLES</span>, but also
+add four new functions as exported symbols of dynamic library.</p></div>
+<div class="paragraph"><p>Static Intel&#174; IPP linking:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>&gt; nmake -f win32\Makefile.msc LOC="-DWITH_IPP -DWITH_IPP_TABLES -I\"%IPPROOT%\include\"" ^
+       LDFLAGS="-nologo -incremental:no -opt:ref ^
+       /EXPORT:zzdeflateCreateStat /EXPORT:zzdeflateGetTabLen /EXPORT:zzdeflateGetTab ^
+       /EXPORT:zzdeflateUseTab ^
+       /LIBPATH:\"%IPPROOT%\lib\ia32_win\" ^
+       ippdcmt.lib ippsmt.lib ippcoremt.lib"</pre>
+</div></div>
+<div class="paragraph"><p>Dynamic Intel&#174; IPP linking:</p></div>
+<div class="listingblock">
+<div class="content monospaced">
+<pre>&gt; nmake -f win32\Makefile.msc LOC="-DWITH_IPP -DWITH_IPP_TABLES -I\"%IPPROOT%\include\"" ^
+       LDFLAGS="-nologo -incremental:no -opt:ref ^
+       /EXPORT:zzdeflateCreateStat /EXPORT:zzdeflateGetTabLen /EXPORT:zzdeflateGetTab ^
+       /EXPORT:zzdeflateUseTab ^
+       /LIBPATH:\"%IPPROOT%\lib\ia32_win\" ^
+       ippdc.lib ipps.lib ippcore.lib"</pre>
+</div></div>
+</div>
+</div>
+<h1 id="_technical_support">Technical Support</h1>
+<div class="paragraph"><p>If you did not register your Intel&#174; software product during
+installation, please do so now at the Intel&#174; Software Development
+Products Registration Center. Registration entitles you to free
+technical support, product updates and upgrades for the duration of the
+support term.</p></div>
+<div class="paragraph"><p>For general information about Intel technical support, product updates,
+user forums, FAQs, tips and tricks, and other support questions, please
+visit (<a href="http://www.intel.com/software/products/support">http://www.intel.com/software/products/support</a>).</p></div>
+
+	<p><div class="Note"><h3 class="NoteTipHead">Note</h3><p>If your distributor provides technical  support for this product, please contact
+them rather than Intel.</p>
+		</div>
+
+	<div class="paragraph"><p>For technical information about the Intel&#174; 
+	IPP library, including FAQ&#8217;s,
+tips and tricks, and other support information, please visit the
+Intel&#174; IPP forum: (<a href="http://software.intel.com/en-us/forums/intel-integrated-performance-primitives">http://software.intel.com/en-us/forums/intel-integrated-performance-primitives</a>)
+and browse the Intel&#174; IPP support page:
+<a href="https://software.intel.com/en-us/intel-ipp-support/">https://software.intel.com/en-us/intel-ipp-support/</a>.</p></div>
+</div>
+<div id="footer">
+<div id="footer-text">
+</div>
+</div>
+</body>
+</html>

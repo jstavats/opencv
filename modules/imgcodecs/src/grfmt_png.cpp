@@ -384,24 +384,64 @@ bool  PngEncoder::write( const Mat& img, const std::vector<int>& params )
                     if( f )
                         png_init_io( png_ptr, (png_FILE_p)f );
                 }
-
-                int compression_level = -1; // Invalid value to allow setting 0-9 as valid
-                int compression_strategy = IMWRITE_PNG_STRATEGY_RLE; // Default strategy
-                bool isBilevel = false;
-
+				                
+				//ATS CHANGE TO DEFAULT FAST SAVING
+				//int compression_level = -1; // Invalid value to allow setting 0-9 as valid
+				//int compression_strategy = IMWRITE_PNG_STRATEGY_RLE; // Default strategy
+				int compression_level = Z_IPP_FAST_COMPRESSION; // Invalid value to allow setting -2 to 9 as valid, -2 is IPP accelerated
+				int compression_strategy = IMWRITE_PNG_STRATEGY_RLE; // Default strategy
+				int compression_filter = PNG_FILTER_SUB;//default filter
+				//ATS CHANGE END
+				
+				bool isBilevel = false;
+				
                 for( size_t i = 0; i < params.size(); i += 2 )
                 {
                     if( params[i] == IMWRITE_PNG_COMPRESSION )
                     {
+						/*
+						ATS COMMENT OUT
                         compression_strategy = IMWRITE_PNG_STRATEGY_DEFAULT; // Default strategy
                         compression_level = params[i+1];
                         compression_level = MIN(MAX(compression_level, 0), Z_BEST_COMPRESSION);
+						*/
+						
+                        compression_level = params[i+1];
+						//ATS CHANGE - IPP allows level -2 as the minimum
+                        compression_level = MIN(MAX(compression_level, Z_IPP_FAST_COMPRESSION ), Z_BEST_COMPRESSION);
                     }
                     if( params[i] == IMWRITE_PNG_STRATEGY )
                     {
                         compression_strategy = params[i+1];
                         compression_strategy = MIN(MAX(compression_strategy, 0), Z_FIXED);
                     }
+					//ATS CHANGE TO ALLOW SELECTION OF FILTER
+					if (params[i] == IMWRITE_PNG_FILTER)
+					{
+						compression_filter = params[i + 1];
+						compression_filter = MIN(MAX(compression_filter, 0), PNG_FILTER_VALUE_PAETH);
+						if (compression_filter == PNG_FILTER_VALUE_SUB)
+						{
+							compression_filter = PNG_FILTER_SUB;
+						}
+						else if (compression_filter == PNG_FILTER_VALUE_NONE)
+						{
+							compression_filter = PNG_FILTER_NONE;
+						}
+						else if (compression_filter == PNG_FILTER_VALUE_UP)
+						{
+							compression_filter = PNG_FILTER_UP;
+						}
+						else if (compression_filter == PNG_FILTER_VALUE_AVG)
+						{
+							compression_filter = PNG_FILTER_AVG;
+						}
+						else if (compression_filter == PNG_FILTER_VALUE_PAETH)
+						{
+							compression_filter = PNG_FILTER_PAETH;
+						}
+					}
+					//ATS CHANGE END
                     if( params[i] == IMWRITE_PNG_BILEVEL )
                     {
                         isBilevel = params[i+1] != 0;
@@ -410,6 +450,7 @@ bool  PngEncoder::write( const Mat& img, const std::vector<int>& params )
 
                 if( m_buf || f )
                 {
+					/* ATS COMMENT OUT - Default in OpenCV 4.5.0
                     if( compression_level >= 0 )
                     {
                         png_set_compression_level( png_ptr, compression_level );
@@ -421,13 +462,42 @@ bool  PngEncoder::write( const Mat& img, const std::vector<int>& params )
                         png_set_filter(png_ptr, PNG_FILTER_TYPE_BASE, PNG_FILTER_SUB);
                         png_set_compression_level(png_ptr, Z_BEST_SPEED);
                     }
-                    png_set_compression_strategy(png_ptr, compression_strategy);
+                   
+					*/
+					//ATS CHANGE Add filter type
+					png_set_filter(png_ptr, PNG_FILTER_TYPE_BASE, compression_filter);
+					//ATS CHANGE END
+
+					//ATS CHANGE BEGIN - We've set the default above
+					//if( compression_level >= 0 )
+					{
+						png_set_compression_level(png_ptr, compression_level);
+					}
+					//else
+					//{
+					// tune parameters for speed
+					// (see http://wiki.linuxquestions.org/wiki/Libpng)
+					//ATS COMMENT OUT png_set_filter(png_ptr, PNG_FILTER_TYPE_BASE, PNG_FILTER_SUB);
+					//  png_set_compression_level(png_ptr, Z_BEST_SPEED);
+					//}
+
+					png_set_compression_strategy(png_ptr, compression_strategy);
 
                     png_set_IHDR( png_ptr, info_ptr, width, height, depth == CV_8U ? isBilevel?1:8 : 16,
                         channels == 1 ? PNG_COLOR_TYPE_GRAY :
                         channels == 3 ? PNG_COLOR_TYPE_RGB : PNG_COLOR_TYPE_RGBA,
                         PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_DEFAULT,
                         PNG_FILTER_TYPE_DEFAULT );
+
+					//ATS CHANGE adding timestamp by default
+					//png_set_tIME(png_const_structrp png_ptr, png_inforp info_ptr, png_const_timep mod_time)
+					time_t current_time;
+					png_time_struct png_time_now;
+					time(&current_time);
+
+					png_convert_from_time_t(&png_time_now, current_time);
+					png_set_tIME(png_ptr, info_ptr, &png_time_now);
+					//ATS CHANGE END
 
                     png_write_info( png_ptr, info_ptr );
 

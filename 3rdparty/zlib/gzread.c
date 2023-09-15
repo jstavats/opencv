@@ -316,7 +316,11 @@ local z_size_t gz_read(state, buf, len)
         /* set n to the maximum amount of len that fits in an unsigned int */
         n = (unsigned)-1;
         if (n > len)
+<<<<<<< Updated upstream
             n = (unsigned)len;
+=======
+            n = len;
+>>>>>>> Stashed changes
 
         /* first just try copying data from the output buffer */
         if (state->x.have) {
@@ -397,7 +401,11 @@ int ZEXPORT gzread(file, buf, len)
     }
 
     /* read len or fewer bytes to buf */
+<<<<<<< Updated upstream
     len = (unsigned)gz_read(state, buf, len);
+=======
+    len = gz_read(state, buf, len);
+>>>>>>> Stashed changes
 
     /* check for an error */
     if (len == 0 && state->err != Z_OK && state->err != Z_BUF_ERROR)
@@ -468,7 +476,12 @@ int ZEXPORT gzgetc(file)
     }
 
     /* nothing there -- try gz_read() */
+<<<<<<< Updated upstream
     return gz_read(state, buf, 1) < 1 ? -1 : buf[0];
+=======
+    ret = gz_read(state, buf, 1);
+    return ret < 1 ? -1 : buf[0];
+>>>>>>> Stashed changes
 }
 
 int ZEXPORT gzgetc_(file)

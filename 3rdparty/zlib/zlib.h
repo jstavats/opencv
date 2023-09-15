@@ -191,6 +191,9 @@ typedef gz_header FAR *gz_headerp;
 #define Z_BEST_SPEED             1
 #define Z_BEST_COMPRESSION       9
 #define Z_DEFAULT_COMPRESSION  (-1)
+#if defined(WITH_IPP)
+#define Z_IPP_FAST_COMPRESSION (-2)
+#endif
 /* compression levels */
 
 #define Z_FILTERED            1
@@ -1926,6 +1929,19 @@ ZEXTERN int            ZEXPORTVA gzvprintf Z_ARG((gzFile file,
                                                   const char *format,
                                                   va_list va));
 #  endif
+#if defined(WITH_IPP)
+ZEXTERN int ZEXPORT zzdeflateCreateStat OF((z_streamp));
+ZEXTERN int ZEXPORT zzdeflateGetTabLen OF((z_streamp));
+ZEXTERN int ZEXPORT zzdeflateGetTab OF((z_streamp, voidpf));
+ZEXTERN int ZEXPORT zzdeflateUseTab OF((z_streamp, voidpf, int));
+ZEXTERN int ZEXPORT zzCompressTable OF((Bytef*, uLongf*, const Bytef*, uLong, const voidpf, uInt));
+
+#define deflateCreateStat zzdeflateCreateStat
+#define deflateGetTabLen zzdeflateGetTabLen
+#define deflateGetTab zzdeflateGetTab
+#define deflateUseTab zzdeflateUseTab
+#define compressTable zzCompressTable
+#endif
 #endif
 
 #ifdef __cplusplus

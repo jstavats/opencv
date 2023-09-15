@@ -218,7 +218,11 @@ local z_size_t gz_write(state, buf, len)
                               state->in);
             copy = state->size - have;
             if (copy > len)
+<<<<<<< Updated upstream
                 copy = (unsigned)len;
+=======
+                copy = len;
+>>>>>>> Stashed changes
             memcpy(state->in + have, buf, copy);
             state->strm.avail_in += copy;
             state->x.pos += copy;
@@ -238,7 +242,11 @@ local z_size_t gz_write(state, buf, len)
         do {
             unsigned n = (unsigned)-1;
             if (n > len)
+<<<<<<< Updated upstream
                 n = (unsigned)len;
+=======
+                n = len;
+>>>>>>> Stashed changes
             state->strm.avail_in = n;
             state->x.pos += n;
             if (gz_comp(state, Z_NO_FLUSH) == -1)
@@ -375,6 +383,7 @@ int ZEXPORT gzputs(file, s)
         return -1;
 
     /* write string */
+<<<<<<< Updated upstream
     len = strlen(s);
     if ((int)len < 0 || (unsigned)len != len) {
         gz_error(state, Z_STREAM_ERROR, "string length does not fit in int");
@@ -382,6 +391,11 @@ int ZEXPORT gzputs(file, s)
     }
     put = gz_write(state, s, len);
     return put < len ? -1 : (int)len;
+=======
+    len = strlen(str);
+    ret = gz_write(state, str, len);
+    return ret == 0 && len != 0 ? -1 : ret;
+>>>>>>> Stashed changes
 }
 
 #if defined(STDC) || defined(Z_HAVE_STDARG_H)

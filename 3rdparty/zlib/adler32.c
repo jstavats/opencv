@@ -5,6 +5,14 @@
 
 /* @(#) $Id$ */
 
+#if defined(WITH_IPP)
+/*
+ * This source code file was modified with Intel(R) Integrated Performance Primitives library content
+ */
+
+#include "ippdc.h"
+#endif
+
 #include "zutil.h"
 
 local uLong adler32_combine_ OF((uLong adler1, uLong adler2, z_off64_t len2));
@@ -65,6 +73,15 @@ uLong ZEXPORT adler32_z(adler, buf, len)
     const Bytef *buf;
     z_size_t len;
 {
+#if defined(WITH_IPP)
+    if( len > 32 ) {
+      Ipp32u resAdler32 = (Ipp32u)adler;
+      if( Z_NULL == buf ) return 1L;
+      ippsAdler32_8u(buf, len, &resAdler32);
+      return ((uLong)resAdler32 & 0xffffffff);
+    } /* if */
+    else {
+#endif
     unsigned long sum2;
     unsigned n;
 
@@ -128,6 +145,9 @@ uLong ZEXPORT adler32_z(adler, buf, len)
 
     /* return recombined sums */
     return adler | (sum2 << 16);
+#if defined(WITH_IPP)
+  }
+#endif
 }
 
 /* ========================================================================= */
