@@ -43,7 +43,7 @@
 #ifndef OPENCV_FEATURES_2D_HPP
 #define OPENCV_FEATURES_2D_HPP
 
-//include "opencv2/opencv_modules.hpp"
+#include "opencv2/opencv_modules.hpp"
 #include "opencv2/core.hpp"
 
 #ifdef HAVE_OPENCV_FLANN
